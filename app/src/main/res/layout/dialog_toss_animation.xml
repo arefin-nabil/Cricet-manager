@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="24dp"
@@ -17,13 +18,13 @@
         android:layout_marginBottom="16dp" />
 
     <!-- Placeholder for Lottie Animation -->
-    <ImageView
-        android:id="@+id/iv_toss_anim"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:src="@drawable/ic_toss_coin"
-        android:tint="@color/green_primary"
-        android:alpha="0.5" />
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_view"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        app:lottie_rawRes="@raw/toss"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true" />
 
     <TextView
         android:layout_width="wrap_content"

@@ -50,6 +50,9 @@ dependencies {
     // Fragment (required by ViewPager2 with FragmentStateAdapter)
     implementation 'androidx.fragment:fragment:1.6.2'
 
+    // Lottie
+    implementation 'com.airbnb.android:lottie:6.4.0'
+
     // Testing
     testImplementation libs.junit
     androidTestImplementation libs.ext.junit

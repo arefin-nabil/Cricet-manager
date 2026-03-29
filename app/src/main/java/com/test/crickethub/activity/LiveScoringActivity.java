@@ -110,6 +110,11 @@ public class LiveScoringActivity extends AppCompatActivity {
     private int partnershipRuns = 0;
     private int partnershipBalls = 0;
 
+    // Transition State Persistence
+    private boolean isWaitingForNextBowler = false;
+    private boolean isWaitingForNextBatsman = false;
+    private Player waitingForDismissedPlayer = null;
+
     // ============================================================
     // Lifecycle
     // ============================================================
@@ -154,6 +159,23 @@ public class LiveScoringActivity extends AppCompatActivity {
         setupUndoButton();
         setupNextOverButton();
         refreshScoreboardUI();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Re-show summary dialogs if we were in the middle of a transition
+        // (e.g. user went to scorecard and came back)
+        if (isWaitingForNextBowler) {
+            String overSummary = "End of Over " + match.getCurrentOvers() + "\nScore: " + match.getCurrentScore() + "/" + match.getCurrentWickets();
+            showTransitionPauseDialog("Over Finished", overSummary, this::endOverAndChangeBowler);
+        } else if (isWaitingForNextBatsman && waitingForDismissedPlayer != null) {
+            String wicketTitle = "Wicket! (W)"; // Simplified for recovery
+            String wicketSummary = waitingForDismissedPlayer.getName() + " is out.\nScore: " + match.getCurrentScore() + "/" + match.getCurrentWickets();
+            showTransitionPauseDialog(wicketTitle, wicketSummary, () -> {
+                showNextBatsmanDialog(waitingForDismissedPlayer);
+            });
+        }
     }
 
     // ============================================================
@@ -385,9 +407,60 @@ public class LiveScoringActivity extends AppCompatActivity {
 
     private void setupExtrasButtons() {
         btnWide.setOnClickListener(v -> recordExtra(BallEvent.TYPE_WIDE, 0));
-        btnNoBall.setOnClickListener(v -> recordExtra(BallEvent.TYPE_NO_BALL, 0));
+        btnNoBall.setOnClickListener(v -> showNoBallDialog());
         btnBye.setOnClickListener(v -> recordBye(BallEvent.TYPE_BYE));
         btnLegBye.setOnClickListener(v -> recordBye(BallEvent.TYPE_LEG_BYE));
+    }
+
+    private void showNoBallDialog() {
+        String[] runOptions = {"0", "1", "2", "3", "4", "6"};
+        
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle("No Ball: Additional Runs")
+                .setItems(runOptions, (dialog, whichRuns) -> {
+                    int extraRuns = (whichRuns == 5) ? 6 : whichRuns;
+                    recordNoBall(extraRuns, true, null); // Default to Bat Runs
+                })
+                .show();
+    }
+
+    private void recordNoBall(int extraRuns, boolean isBat, String extraType) {
+        int penalty = 1; 
+        addRunsToMatch(penalty + extraRuns);
+        currentBowler.addRunsConceded(penalty + extraRuns);
+        currentBowler.addBallBowled(); // NB counts for bowler
+
+        BallEvent ball = new BallEvent();
+        ball.setDeliveryType(BallEvent.TYPE_NO_BALL);
+        ball.setMatchId(matchId);
+        ball.setInningsNumber(match.getInningsNumber());
+        ball.setOverNumber(match.getCurrentOvers());
+        ball.setBowlerId(currentBowler.getId());
+
+        if (isBat) {
+            striker.addRuns(extraRuns);
+            striker.addBall(); // NB doesn't count for batsman's balls normally, but let's stick to simple logic
+            ball.setRunsScored(extraRuns);
+            ball.setExtras(penalty);
+            ball.setBatsmanId(striker.getId());
+            ball.setDisplayLabel("NB+" + extraRuns);
+            
+            if (extraRuns % 2 != 0) swapStriker();
+        } else {
+            striker.addBall(); // Ball faced
+            ball.setExtras(penalty + extraRuns);
+            ball.setDisplayLabel("NB+" + (extraType.equals(BallEvent.TYPE_BYE) ? "B" : "LB") + extraRuns);
+            
+            if (extraRuns % 2 != 0) swapStriker();
+        }
+
+        db.insertBallEvent(ball);
+        addBallChip(ball);
+        currentOverBalls.add(ball);
+        db.updateMatch(match);
+        refreshScoreboardUI();
+
+        checkInningsCompletion();
     }
 
     // ============================================================
@@ -412,12 +485,14 @@ public class LiveScoringActivity extends AppCompatActivity {
 
     private void setupNextOverButton() {
         btnNextOver.setOnClickListener(v -> {
-            // Allow manual over completion (for edge cases)
+            // Allow manual over completion (for edge cases like retiring hurts)
             if (currentOverBalls.isEmpty()) {
                 Toast.makeText(this, "No balls bowled yet", Toast.LENGTH_SHORT).show();
                 return;
             }
-            endOverAndChangeBowler();
+            String overSummary = "Manual Over End\nScore: " + match.getCurrentScore() + "/" + match.getCurrentWickets();
+            isWaitingForNextBowler = true;
+            showTransitionPauseDialog("Over Finished", overSummary, this::endOverAndChangeBowler);
         });
     }
 
@@ -475,9 +550,12 @@ public class LiveScoringActivity extends AppCompatActivity {
         db.updateMatch(match);
         refreshScoreboardUI();
 
-        boolean isInningsOver = checkInningsCompletion();
-        if (!isInningsOver && match.getCurrentBalls() == 0) {
-            endOverAndChangeBowler();
+        if (!checkInningsCompletion()) {
+            if (match.getCurrentBalls() == 0) {
+                String overSummary = "End of Over " + match.getCurrentOvers() + "\nScore: " + match.getCurrentScore() + "/" + match.getCurrentWickets();
+                isWaitingForNextBowler = true;
+                showTransitionPauseDialog("Over Finished", overSummary, this::endOverAndChangeBowler);
+            }
         }
     }
 
@@ -544,7 +622,9 @@ public class LiveScoringActivity extends AppCompatActivity {
 
                     if (!checkInningsCompletion()) {
                         if (match.getCurrentBalls() == 0) {
-                            endOverAndChangeBowler();
+                            String overSummary = "End of Over " + match.getCurrentOvers() + "\nScore: " + match.getCurrentScore() + "/" + match.getCurrentWickets();
+                            isWaitingForNextBowler = true;
+                            showTransitionPauseDialog("Over Finished", overSummary, this::endOverAndChangeBowler);
                         }
                     }
                 });
@@ -573,19 +653,6 @@ public class LiveScoringActivity extends AppCompatActivity {
         // Dismissal chips
         ChipGroup chipGroupDismissal = dialogView.findViewById(R.id.chip_group_dismissal);
 
-        // Next batsman
-        Spinner spinnerNextBatsman = dialogView.findViewById(R.id.spinner_next_batsman);
-        List<String> upcoming = new ArrayList<>();
-        for (int i = nextBatsmanIndex; i < battingTeamPlayers.size(); i++) {
-            upcoming.add(battingTeamPlayers.get(i).getName());
-        }
-        if (upcoming.isEmpty())
-            upcoming.add("All Out");
-        ArrayAdapter<String> nextAdapter = new ArrayAdapter<>(this,
-                android.R.layout.simple_spinner_item, upcoming);
-        nextAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerNextBatsman.setAdapter(nextAdapter);
-
         androidx.appcompat.app.AlertDialog dialog = new com.google.android.material.dialog.MaterialAlertDialogBuilder(
                 this)
                 .setView(dialogView)
@@ -606,24 +673,7 @@ public class LiveScoringActivity extends AppCompatActivity {
             // Record wicket
             processWicket(dismissed, dismissalType);
 
-            // Bring in next batsman
-            int nextPos = spinnerNextBatsman.getSelectedItemPosition();
-            if (nextBatsmanIndex + nextPos < battingTeamPlayers.size()) {
-                Player nextBat = battingTeamPlayers.get(nextBatsmanIndex + nextPos);
-                if (dismissed == striker) {
-                    striker = nextBat;
-                } else {
-                    nonStriker = nextBat;
-                }
-                nextBatsmanIndex++;
-            }
-
-            // Reset partnership
-            partnershipRuns = 0;
-            partnershipBalls = 0;
-
             dialog.dismiss();
-            refreshScoreboardUI();
         });
 
         dialog.show();
@@ -683,11 +733,61 @@ public class LiveScoringActivity extends AppCompatActivity {
         currentOverBalls.add(ball);
 
         db.updateMatch(match);
+        refreshScoreboardUI();
 
-        boolean isInningsOver = checkInningsCompletion();
-        if (!isInningsOver && match.getCurrentBalls() == 0) {
-            endOverAndChangeBowler();
+        if (!checkInningsCompletion()) {
+            String wicketTitle = "Wicket! (" + dismissalType + ")";
+            String wicketSummary = (dismissed != null ? dismissed.getName() : "Batsman") + " is out.\nScore: " + match.getCurrentScore() + "/" + match.getCurrentWickets();
+            
+            isWaitingForNextBatsman = true;
+            waitingForDismissedPlayer = dismissed;
+            showTransitionPauseDialog(wicketTitle, wicketSummary, () -> {
+                showNextBatsmanDialog(dismissed);
+            });
         }
+    }
+
+    private void showNextBatsmanDialog(Player dismissed) {
+        isWaitingForNextBatsman = false; // Reset flag
+        waitingForDismissedPlayer = null;
+        List<String> upcoming = new ArrayList<>();
+        List<Player> players = new ArrayList<>();
+        for (int i = nextBatsmanIndex; i < battingTeamPlayers.size(); i++) {
+            upcoming.add(battingTeamPlayers.get(i).getName());
+            players.add(battingTeamPlayers.get(i));
+        }
+
+        if (upcoming.isEmpty()) {
+            Toast.makeText(this, "No more batsmen available", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle("Select Next Batsman")
+                .setItems(upcoming.toArray(new String[0]), (dialog, which) -> {
+                    Player nextBat = players.get(which);
+                    if (dismissed == striker) {
+                        striker = nextBat;
+                    } else {
+                        nonStriker = nextBat;
+                    }
+                    nextBatsmanIndex = battingTeamPlayers.indexOf(nextBat) + 1;
+                    
+                    // Reset partnership
+                    partnershipRuns = 0;
+                    partnershipBalls = 0;
+                    
+                    refreshScoreboardUI();
+                    
+                    // Check if over ended on the wicket ball
+                    if (match.getCurrentBalls() == 0) {
+                        String overSummary = "End of Over " + match.getCurrentOvers() + "\nScore: " + match.getCurrentScore() + "/" + match.getCurrentWickets();
+                        isWaitingForNextBowler = true;
+                        showTransitionPauseDialog("Over Finished", overSummary, this::endOverAndChangeBowler);
+                    }
+                })
+                .setCancelable(false)
+                .show();
     }
 
     // ============================================================
@@ -745,6 +845,7 @@ public class LiveScoringActivity extends AppCompatActivity {
     // ============================================================
 
     private void endOverAndChangeBowler() {
+        isWaitingForNextBowler = false; // Reset flag as we are now selecting
         // Swap striker positions at end of over
         swapStriker();
 
@@ -967,18 +1068,29 @@ public class LiveScoringActivity extends AppCompatActivity {
         chip.setTextColor(getColor(R.color.text_on_green));
 
         // Background color by type
+        String type = ball.getDeliveryType();
+        int totalRuns = ball.totalRuns();
+
         if (ball.isWicket()) {
             chip.setBackgroundResource(R.drawable.bg_ball_wicket);
+            chip.setTextColor(getColor(R.color.text_on_green));
+        } else if (type.equals(BallEvent.TYPE_NO_BALL) || type.equals(BallEvent.TYPE_BYE) || type.equals(BallEvent.TYPE_LEG_BYE)) {
+            if (totalRuns > 4) {
+                chip.setBackgroundResource(R.drawable.bg_ball_boundary);
+                chip.setTextColor(getColor(R.color.text_on_green));
+            } else {
+                chip.setBackgroundResource(R.drawable.bg_ball_wide);
+                chip.setTextColor(getColor(android.R.color.black));
+            }
         } else if (ball.getRunsScored() == 4 || ball.getRunsScored() == 6) {
             chip.setBackgroundResource(R.drawable.bg_ball_boundary);
-        } else if (ball.getDeliveryType().equals(BallEvent.TYPE_WIDE)
-                || ball.getDeliveryType().equals(BallEvent.TYPE_NO_BALL)) {
+            chip.setTextColor(getColor(R.color.text_on_green));
+        } else if (type.equals(BallEvent.TYPE_WIDE)) {
             chip.setBackgroundResource(R.drawable.bg_ball_wide);
             chip.setTextColor(getColor(android.R.color.black));
-        } else if (ball.getRunsScored() == 0) {
-            chip.setBackgroundResource(R.drawable.bg_ball_dot);
         } else {
             chip.setBackgroundResource(R.drawable.bg_ball_dot);
+            chip.setTextColor(getColor(R.color.text_on_green));
         }
 
         layoutBallChips.addView(chip);
@@ -1080,6 +1192,24 @@ public class LiveScoringActivity extends AppCompatActivity {
     interface RunInputCallback {
         void onRuns(int runs);
     }
+
+    private void showTransitionPauseDialog(String title, String message, Runnable onContinue) {
+        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                .setTitle(title)
+                .setMessage(message)
+                .setCancelable(false)
+                .setPositiveButton("Continue", (dialog, which) -> onContinue.run())
+                .setNeutralButton("View Scorecard", (dialog, which) -> {
+                    Intent intent = new Intent(this, ScorecardActivity.class);
+                    intent.putExtra("match_id", matchId);
+                    startActivity(intent);
+                })
+                .show();
+    }
+
+    // ============================================================
+    // HELPER — Simple run input dialog (for byes)
+    // ============================================================
 
     private void showRunInputDialog(String title, RunInputCallback callback) {
         String[] options = { "0", "1", "2", "3", "4", "5", "6" };

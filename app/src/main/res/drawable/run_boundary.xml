@@ -3,7 +3,8 @@
 <ripple xmlns:android="http://schemas.android.com/apk/res/android"
     android:color="@android:color/white">
     <item>
-        <shape android:shape="oval">
+        <shape android:shape="rectangle">
+            <corners android:radius="8dp" />
             <solid android:color="@color/color_boundary" />
         </shape>
     </item>

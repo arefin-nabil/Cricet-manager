@@ -742,7 +742,7 @@
                 android:textColor="@color/text_on_green"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:background="@drawable/bg_ball_boundary"
+                android:background="@drawable/run_boundary"
                 android:clickable="true"
                 android:focusable="true" />
 
@@ -758,7 +758,7 @@
                 android:textColor="@color/text_on_green"
                 android:textStyle="bold"
                 android:gravity="center"
-                android:background="@drawable/bg_ball_boundary"
+                android:background="@drawable/run_boundary"
                 android:clickable="true"
                 android:focusable="true" />
 
