@@ -85,17 +85,18 @@
                     android:paddingStart="@dimen/spacing_md"
                     android:paddingEnd="@dimen/spacing_md">
 
-                    <ImageView
-                        android:id="@+id/iv_team_a_logo"
-                        android:layout_width="36dp"
-                        android:layout_height="36dp"
-                        android:background="@drawable/bg_team_logo"
-                        android:src="@drawable/team2"
-                        android:padding="6dp"
-                        android:contentDescription="Team A logo"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        <ImageView
+                            android:id="@+id/iv_team_a_logo"
+                            android:layout_width="36dp"
+                            android:layout_height="36dp"
+                            android:background="@drawable/bg_team_logo"
+                            android:src="@drawable/team2"
+                            app:tint="@color/text_primary"
+                            android:padding="6dp"
+                            android:contentDescription="Team A logo"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -179,6 +180,7 @@
                         android:layout_height="36dp"
                         android:background="@drawable/bg_team_logo"
                         android:src="@drawable/team2"
+                        app:tint="@color/text_primary"
                         android:padding="6dp"
                         android:contentDescription="Team B logo"
                         app:layout_constraintTop_toTopOf="parent"

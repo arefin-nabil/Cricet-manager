@@ -78,6 +78,7 @@
                     android:layout_height="72dp"
                     android:background="@drawable/bg_team_logo"
                     android:src="@drawable/team2"
+                    app:tint="@color/text_primary"
                     android:padding="16dp"
                     android:scaleType="centerInside"
                     android:layout_marginEnd="@dimen/spacing_md"

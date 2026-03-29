@@ -15,7 +15,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 
 import android.content.res.ColorStateList;
-import android.graphics.PorterDuff;
+import androidx.activity.OnBackPressedCallback;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.test.crickethub.fragment.HomeFragment;
@@ -30,6 +30,8 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
 
     private BottomNavigationView bottomNav;
     private MaterialToolbar toolbar;
+    private long lastBackPressTime;
+    private android.widget.Toast backToast;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
         });
 
         setupBottomNav();
+        setupBackPressed();
         
         // Load default fragment (Home)
         if (savedInstanceState == null) {
@@ -79,6 +82,15 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
         bottomNav.setItemIconTintList(navColors);
         bottomNav.setItemTextColor(navColors);
         bottomNav.setItemActiveIndicatorEnabled(false);
+        
+        // Force-tint each menu icon individually as a belt-and-suspenders approach for PNGs
+        android.view.Menu menu = bottomNav.getMenu();
+        for (int i = 0; i < menu.size(); i++) {
+            android.view.MenuItem item = menu.getItem(i);
+            if (item.getIcon() != null) {
+                item.getIcon().setTintList(navColors);
+            }
+        }
         
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment fragment = null;
@@ -120,9 +132,37 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
         bottomNav.setSelectedItemId(R.id.nav_history);
     }
 
+    private void setupBackPressed() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                if (bottomNav.getSelectedItemId() != R.id.nav_home) {
+                    bottomNav.setSelectedItemId(R.id.nav_home);
+                } else {
+                    if (lastBackPressTime + 2000 > System.currentTimeMillis()) {
+                        if (backToast != null) backToast.cancel();
+                        setEnabled(false);
+                        getOnBackPressedDispatcher().onBackPressed();
+                    } else {
+                        backToast = android.widget.Toast.makeText(MainActivity.this, "Tap again to exit", android.widget.Toast.LENGTH_SHORT);
+                        backToast.show();
+                        lastBackPressTime = System.currentTimeMillis();
+                    }
+                }
+            }
+        });
+    }
+
     @Override
     public boolean onCreateOptionsMenu(android.view.Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        
+        // Programmatically tint the Settings icon for visibility
+        android.view.MenuItem settingsItem = menu.findItem(R.id.action_settings);
+        if (settingsItem != null && settingsItem.getIcon() != null) {
+            settingsItem.getIcon().setTintList(ContextCompat.getColorStateList(this, R.color.text_primary));
+        }
+        
         return true;
     }
 
