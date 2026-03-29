@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,9 +47,7 @@ public class CreateMatchActivity extends AppCompatActivity {
     private MaterialCardView  cardTeamA, cardTeamB;
     private TextView          tvTeamASelected, tvTeamBSelected;
     private ChipGroup         chipGroupOvers;
-    private Chip              chip5, chip10, chip20, chip15, chipCustom;
-    private TextInputLayout   tilCustomOvers;
-    private Spinner           spinnerTossWinner;
+    private Chip              chip5, chip10, chip20, chip15;
     private MaterialButton    btnRunToss;
     private TextView          tvTossResult;
     private com.google.android.material.materialswitch.MaterialSwitch switchRandomToss;
@@ -67,8 +66,9 @@ public class CreateMatchActivity extends AppCompatActivity {
     private List<Team>      teams;
     private Team            selectedTeamA;
     private Team            selectedTeamB;
-    private int             selectedOvers  = 20;    // default T20
+    private int             selectedOvers  = 5;     // default now 5
     private String          tossElection   = "bat"; // default is bat
+    private EditText etOversCount; // New field for stepper input
 
     // ============================================================
     // Lifecycle
@@ -110,11 +110,11 @@ public class CreateMatchActivity extends AppCompatActivity {
         chipGroupOvers    = findViewById(R.id.chip_group_overs);
         chip5             = findViewById(R.id.chip_5_overs);
         chip10            = findViewById(R.id.chip_10_overs);
-        chip20            = findViewById(R.id.chip_20_overs);
         chip15            = findViewById(R.id.chip_15_overs);
-        chipCustom        = findViewById(R.id.chip_custom_overs);
-        tilCustomOvers    = findViewById(R.id.til_custom_overs);
-        spinnerTossWinner = null; // Spinner removed from XML
+        chip20            = findViewById(R.id.chip_20_overs);
+        etOversCount      = findViewById(R.id.et_overs_count);
+        // tilCustomOvers removed from XML
+
         btnRunToss        = findViewById(R.id.btn_run_toss);
         tvTossResult      = findViewById(R.id.tv_toss_result);
         switchRandomToss  = findViewById(R.id.switch_random_toss);
@@ -181,9 +181,18 @@ public class CreateMatchActivity extends AppCompatActivity {
     private void updateManualTossButtons() {
         if (selectedTeamA != null) {
             btnManualTeamA.setText(selectedTeamA.getName());
+            btnManualTeamA.setEnabled(true);
+        } else {
+            btnManualTeamA.setText("Team A");
+            btnManualTeamA.setEnabled(false);
         }
+        
         if (selectedTeamB != null) {
             btnManualTeamB.setText(selectedTeamB.getName());
+            btnManualTeamB.setEnabled(true);
+        } else {
+            btnManualTeamB.setText("Team B");
+            btnManualTeamB.setEnabled(false);
         }
     }
 
@@ -192,15 +201,45 @@ public class CreateMatchActivity extends AppCompatActivity {
     // ============================================================
 
     private void setupOversChips() {
-        chip5.setOnCheckedChangeListener((btn, checked) -> { if (checked) { selectedOvers = 5; tilCustomOvers.setVisibility(View.GONE); } });
-        chip10.setOnCheckedChangeListener((btn, checked) -> { if (checked) { selectedOvers = 10; tilCustomOvers.setVisibility(View.GONE); } });
-        chip20.setOnCheckedChangeListener((btn, checked) -> { if (checked) { selectedOvers = 20; tilCustomOvers.setVisibility(View.GONE); } });
-        chip15.setOnCheckedChangeListener((btn, checked) -> { if (checked) { selectedOvers = 15; tilCustomOvers.setVisibility(View.GONE); } });
-        chipCustom.setOnCheckedChangeListener((btn, checked) -> {
-            if (checked) {
-                tilCustomOvers.setVisibility(View.VISIBLE);
+        chip5.setOnCheckedChangeListener((btn, checked) -> { if (checked) { updateOvers(5); } });
+        chip10.setOnCheckedChangeListener((btn, checked) -> { if (checked) { updateOvers(10); } });
+        chip20.setOnCheckedChangeListener((btn, checked) -> { if (checked) { updateOvers(20); } });
+        chip15.setOnCheckedChangeListener((btn, checked) -> { if (checked) { updateOvers(15); } });
+
+        findViewById(R.id.btn_overs_minus).setOnClickListener(v -> {
+            if (selectedOvers > 1) updateOvers(selectedOvers - 1);
+        });
+
+        findViewById(R.id.btn_overs_plus).setOnClickListener(v -> {
+            if (selectedOvers < 99) updateOvers(selectedOvers + 1);
+        });
+
+        etOversCount.addTextChangedListener(new android.text.TextWatcher() {
+            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override public void afterTextChanged(android.text.Editable s) {
+                try {
+                    int val = Integer.parseInt(s.toString());
+                    if (val >= 1 && val <= 99) {
+                        selectedOvers = val;
+                        syncChipsWithCount(val);
+                    }
+                } catch (NumberFormatException ignored) {}
             }
         });
+    }
+
+    private void updateOvers(int count) {
+        selectedOvers = count;
+        etOversCount.setText(String.valueOf(count));
+        syncChipsWithCount(count);
+    }
+
+    private void syncChipsWithCount(int count) {
+        chip5.setChecked(count == 5);
+        chip10.setChecked(count == 10);
+        chip15.setChecked(count == 15);
+        chip20.setChecked(count == 20);
     }
 
     // ============================================================
@@ -229,10 +268,12 @@ public class CreateMatchActivity extends AppCompatActivity {
 
         groupManualToss.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (isChecked) {
-                if (checkedId == R.id.btn_manual_team_a) {
+                if (checkedId == R.id.btn_manual_team_a && selectedTeamA != null) {
                     tossWinnerId = selectedTeamA.getId();
-                } else if (checkedId == R.id.btn_manual_team_b) {
+                } else if (checkedId == R.id.btn_manual_team_b && selectedTeamB != null) {
                     tossWinnerId = selectedTeamB.getId();
+                } else {
+                    tossWinnerId = -1;
                 }
             }
         });
@@ -290,23 +331,15 @@ public class CreateMatchActivity extends AppCompatActivity {
             return;
         }
 
-        // Custom overs validation
-        if (chipCustom.isChecked()) {
-            String customText = tilCustomOvers.getEditText() != null
-                    ? tilCustomOvers.getEditText().getText().toString() : "";
-            if (customText.isEmpty()) {
-                Toast.makeText(this, getString(R.string.error_select_overs), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            selectedOvers = Integer.parseInt(customText);
-            if (selectedOvers < 1 || selectedOvers > 50) {
-                Toast.makeText(this, "Overs must be between 1 and 50", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        // Overs are already validated by the stepper/EditText listeners
+        if (selectedOvers < 1 || selectedOvers > 99) {
+            Toast.makeText(this, "Overs must be between 1 and 99", Toast.LENGTH_SHORT).show();
+            return;
         }
 
         if (tossWinnerId == -1) {
-            Toast.makeText(this, "Please run the toss first!", Toast.LENGTH_SHORT).show();
+            String error = switchRandomToss.isChecked() ? "Please run the toss first!" : "Please select the toss winner!";
+            Toast.makeText(this, error, Toast.LENGTH_SHORT).show();
             return;
         }
 
