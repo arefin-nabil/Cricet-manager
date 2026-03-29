@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Bottom Navigation Menu for CricketHub - 4 main tabs -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Tab 1: Home / Dashboard -->
+    <item
+        android:id="@+id/nav_home"
+        android:icon="@android:drawable/ic_menu_compass"
+        android:title="@string/nav_home" />
+
+    <!-- Tab 2: Teams -->
+    <item
+        android:id="@+id/nav_teams"
+        android:icon="@android:drawable/ic_menu_manage"
+        android:title="@string/nav_teams" />
+
+
+
+    <!-- Tab 4: Match History -->
+    <item
+        android:id="@+id/nav_history"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        android:title="@string/nav_history" />
+
+</menu>

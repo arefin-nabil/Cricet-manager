@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Name -->
+    <string name="app_name">CricketHub</string>
+
+    <!-- Navigation Labels -->
+    <string name="nav_home">Home</string>
+    <string name="nav_teams">Teams</string>
+    <string name="nav_match">Match</string>
+    <string name="nav_history">History</string>
+
+    <!-- Dashboard -->
+    <string name="dashboard_title">CricketHub</string>
+    <string name="dashboard_subtitle">Local Cricket Scorer</string>
+    <string name="fab_start_match">Start New Match</string>
+    <string name="section_my_teams">My Teams</string>
+    <string name="section_recent_matches">Recent Matches</string>
+    <string name="section_quick_stats">Quick Stats</string>
+    <string name="no_teams">No teams yet. Create one!</string>
+    <string name="no_matches">No matches recorded yet.</string>
+
+    <!-- Create Team -->
+    <string name="create_team_title">Create Team</string>
+    <string name="team_name_hint">Team Name</string>
+    <string name="add_player">+ Add Player</string>
+    <string name="save_team">Save Team</string>
+    <string name="player_name_hint">Player Name</string>
+    <string name="jersey_hint">#</string>
+    <string name="role_batsman">Batsman</string>
+    <string name="role_bowler">Bowler</string>
+    <string name="role_allrounder">All-rounder</string>
+    <string name="role_keeper">Keeper</string>
+
+    <!-- Create Match -->
+    <string name="create_match_title">New Match</string>
+    <string name="select_team_a">Select Team A</string>
+    <string name="select_team_b">Select Team B</string>
+    <string name="overs_title">Overs</string>
+    <string name="toss_title">Toss</string>
+    <string name="toss_bat">Elected to Bat</string>
+    <string name="toss_bowl">Elected to Bowl</string>
+    <string name="start_match">Start Match</string>
+    <string name="select_playing_xi">Select Playing XI</string>
+
+    <!-- Live Scoring -->
+    <string name="live_scoring_title">Live Match</string>
+    <string name="innings_first">1st Innings</string>
+    <string name="innings_second">2nd Innings</string>
+    <string name="current_rr">CRR</string>
+    <string name="required_rr">RRR</string>
+    <string name="overs_label">Overs</string>
+    <string name="batsmen_label">Batsmen</string>
+    <string name="bowler_label">Bowler</string>
+    <string name="recent_balls">This Over</string>
+    <string name="btn_wide">WD</string>
+    <string name="btn_noball">NB</string>
+    <string name="btn_bye">Bye</string>
+    <string name="btn_legbye">LB</string>
+    <string name="btn_wicket">WICKET</string>
+    <string name="btn_undo">Undo</string>
+    <string name="btn_next_over">Next Over</string>
+
+    <!-- Wicket Types -->
+    <string name="wkt_bowled">Bowled</string>
+    <string name="wkt_caught">Caught</string>
+    <string name="wkt_lbw">LBW</string>
+    <string name="wkt_runout">Run Out</string>
+    <string name="wkt_stumped">Stumped</string>
+    <string name="wkt_hitwicket">Hit Wicket</string>
+
+    <!-- Scorecard -->
+    <string name="scorecard_title">Scorecard</string>
+    <string name="tab_batting">Batting</string>
+    <string name="tab_bowling">Bowling</string>
+    <string name="tab_fow">Fall of Wickets</string>
+    <string name="col_player">PLAYER</string>
+    <string name="col_runs">R</string>
+    <string name="col_balls">B</string>
+    <string name="col_fours">4s</string>
+    <string name="col_sixes">6s</string>
+    <string name="col_sr">SR</string>
+    <string name="col_overs">OV</string>
+    <string name="col_wickets">W</string>
+    <string name="col_economy">ECO</string>
+
+    <!-- Match History -->
+    <string name="history_title">Match History</string>
+    <string name="no_history">No match history found.</string>
+    <string name="won">WON</string>
+    <string name="lost">LOST</string>
+    <string name="vs">vs</string>
+
+    <!-- Quick Stats -->
+    <string name="stat_matches_played">Matches</string>
+    <string name="stat_highest_score">Highest Score</string>
+    <string name="stat_total_teams">Teams</string>
+
+    <!-- Errors / Toasts -->
+    <string name="error_select_teams">Please select both teams</string>
+    <string name="error_same_teams">Team A and Team B cannot be the same</string>
+    <string name="error_select_overs">Please select number of overs</string>
+    <string name="error_team_name">Please enter a team name</string>
+    <string name="error_add_players">Please add at least 2 players</string>
+    <string name="toast_team_saved">Team saved successfully!</string>
+    <string name="toast_match_started">Match started. Good luck!</string>
+</resources>

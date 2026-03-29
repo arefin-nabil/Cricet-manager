@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+    item_player_row.xml - Player row in Create Team list
+    Shows: jersey number, name input, role spinner, edit/delete icons
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.CricketHub.Card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_sm">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_sm">
+
+        <!-- Jersey Number -->
+        <TextView
+            android:id="@+id/tv_jersey_number"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:text="#1"
+            android:textSize="@dimen/text_body"
+            android:textColor="@color/green_primary"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:background="@drawable/bg_team_logo"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/spinner_role"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <!-- Player Name -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/til_player_name"
+            style="@style/Widget.CricketHub.TextInputLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:hint="@string/player_name_hint"
+            android:layout_marginStart="@dimen/spacing_sm"
+            android:layout_marginEnd="@dimen/spacing_sm"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_jersey_number"
+            app:layout_constraintEnd_toStartOf="@id/btn_delete_player">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/et_player_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_primary"
+                android:inputType="textCapWords"
+                android:maxLines="1"
+                android:imeOptions="actionNext" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Delete Button -->
+        <ImageButton
+            android:id="@+id/btn_delete_player"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@android:drawable/ic_menu_delete"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="@color/color_wicket"
+            android:contentDescription="Delete player"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/spinner_role" />
+
+        <!-- Role Spinner -->
+        <Spinner
+            android:id="@+id/spinner_role"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="@dimen/spacing_xs"
+            android:background="@color/bg_surface"
+            android:popupBackground="@color/bg_card"
+            app:layout_constraintTop_toBottomOf="@id/til_player_name"
+            app:layout_constraintStart_toEndOf="@id/tv_jersey_number"
+            app:layout_constraintEnd_toStartOf="@id/btn_delete_player"
+            android:layout_marginStart="@dimen/spacing_sm"
+            android:layout_marginEnd="@dimen/spacing_sm"
+            android:layout_marginBottom="@dimen/spacing_xs"
+            app:layout_constraintBottom_toBottomOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

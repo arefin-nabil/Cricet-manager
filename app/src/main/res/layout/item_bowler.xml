@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+    item_bowler.xml - Bowling scorecard row
+    Columns: Bowler Name | OV | R | W | ECO
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingStart="@dimen/spacing_md"
+    android:paddingEnd="@dimen/spacing_md"
+    android:paddingTop="@dimen/spacing_sm"
+    android:paddingBottom="@dimen/spacing_sm"
+    android:background="?attr/selectableItemBackground">
+
+    <!-- Bowler Name -->
+    <TextView
+        android:id="@+id/tv_bow_name"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:text="Bowler Name"
+        android:textSize="@dimen/text_body"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:maxLines="1"
+        android:ellipsize="end"
+        tools:text="J. Bumrah" />
+
+    <!-- OV (Overs) -->
+    <TextView
+        android:id="@+id/tv_bow_overs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="0.0"
+        android:textSize="@dimen/text_body"
+        android:textColor="@color/text_secondary"
+        android:gravity="center"
+        tools:text="4.0" />
+
+    <!-- R (Runs) -->
+    <TextView
+        android:id="@+id/tv_bow_runs"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="0"
+        android:textSize="@dimen/text_body"
+        android:textColor="@color/text_secondary"
+        android:gravity="center"
+        tools:text="24" />
+
+    <!-- W (Wickets) -->
+    <TextView
+        android:id="@+id/tv_bow_wickets"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="0"
+        android:textSize="@dimen/text_body"
+        android:textColor="@color/text_primary"
+        android:textStyle="bold"
+        android:gravity="center"
+        tools:text="3" />
+
+    <!-- ECO (Economy) -->
+    <TextView
+        android:id="@+id/tv_bow_economy"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="0.00"
+        android:textSize="@dimen/text_body"
+        android:textColor="@color/green_primary"
+        android:gravity="center"
+        tools:text="6.00" />
+
+</LinearLayout>

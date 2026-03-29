@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="24dp"
+    android:background="@color/bg_primary">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Tossing Coin..."
+        android:textSize="@dimen/text_subtitle"
+        android:textColor="@color/green_primary"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Placeholder for Lottie Animation -->
+    <ImageView
+        android:id="@+id/iv_toss_anim"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/ic_toss_coin"
+        android:tint="@color/green_primary"
+        android:alpha="0.5" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Randomizing result..."
+        android:textColor="@color/text_secondary"
+        android:textSize="@dimen/text_caption"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

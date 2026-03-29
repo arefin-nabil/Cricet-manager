@@ -1,0 +1,183 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+    dialog_wicket.xml - Wicket Type Selection Dialog
+    Player out, dismissal type, fielder selection
+-->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/bg_card"
+    android:padding="@dimen/spacing_lg">
+
+    <!-- Dialog Title -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="WICKET"
+        android:textSize="@dimen/text_title"
+        android:textColor="@color/color_wicket"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/spacing_md" />
+
+    <!-- Batsman Out label -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="BATSMAN OUT"
+        android:textSize="@dimen/text_label"
+        android:textColor="@color/text_hint"
+        android:letterSpacing="0.1"
+        android:layout_marginBottom="@dimen/spacing_xs" />
+
+    <!-- Batsman Spinner -->
+    <Spinner
+        android:id="@+id/spinner_batsman_out"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/touch_target_min"
+        android:background="@color/bg_surface"
+        android:popupBackground="@color/bg_card"
+        android:layout_marginBottom="@dimen/spacing_md" />
+
+    <!-- Dismissal Type label -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="DISMISSAL TYPE"
+        android:textSize="@dimen/text_label"
+        android:textColor="@color/text_hint"
+        android:letterSpacing="0.1"
+        android:layout_marginBottom="@dimen/spacing_xs" />
+
+    <!-- Dismissal type chips -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group_dismissal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_md"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_bowled"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bowled"
+            android:textColor="@color/text_primary"
+            app:chipBackgroundColor="@color/bg_surface"
+            android:checked="true" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_caught"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Caught"
+            android:textColor="@color/text_primary"
+            app:chipBackgroundColor="@color/bg_surface" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_lbw"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LBW"
+            android:textColor="@color/text_primary"
+            app:chipBackgroundColor="@color/bg_surface" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_runout"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Run Out"
+            android:textColor="@color/text_primary"
+            app:chipBackgroundColor="@color/bg_surface" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_stumped"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stumped"
+            android:textColor="@color/text_primary"
+            app:chipBackgroundColor="@color/bg_surface" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_hitwicket"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hit Wicket"
+            android:textColor="@color/text_primary"
+            app:chipBackgroundColor="@color/bg_surface" />
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Fielder label (conditional - shown for Caught/Stumped/Run Out) -->
+    <TextView
+        android:id="@+id/tv_fielder_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="FIELDER"
+        android:textSize="@dimen/text_label"
+        android:textColor="@color/text_hint"
+        android:letterSpacing="0.1"
+        android:layout_marginBottom="@dimen/spacing_xs"
+        android:visibility="gone" />
+
+    <Spinner
+        android:id="@+id/spinner_fielder"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/touch_target_min"
+        android:background="@color/bg_surface"
+        android:popupBackground="@color/bg_card"
+        android:layout_marginBottom="@dimen/spacing_md"
+        android:visibility="gone" />
+
+    <!-- Next Batsman Label -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="NEXT BATSMAN"
+        android:textSize="@dimen/text_label"
+        android:textColor="@color/text_hint"
+        android:letterSpacing="0.1"
+        android:layout_marginBottom="@dimen/spacing_xs" />
+
+    <Spinner
+        android:id="@+id/spinner_next_batsman"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/touch_target_min"
+        android:background="@color/bg_surface"
+        android:popupBackground="@color/bg_card"
+        android:layout_marginBottom="@dimen/spacing_lg" />
+
+    <!-- Action buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_dismiss_cancel"
+            style="@style/Widget.CricketHub.Button.Secondary"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_weight="1"
+            android:layout_marginEnd="@dimen/spacing_sm"
+            android:text="Cancel" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_dismiss_confirm"
+            style="@style/Widget.CricketHub.Button.Wicket"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_weight="2"
+            android:text="Confirm Wicket" />
+
+    </LinearLayout>
+
+</LinearLayout>

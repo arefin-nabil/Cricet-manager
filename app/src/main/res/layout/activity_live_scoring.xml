@@ -1,0 +1,868 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    activity_live_scoring.xml - CORE SCREEN: Live Ball-by-Ball Scoring
+    Layout sections (top to bottom):
+      1. Toolbar with match info
+      2. SCOREBOARD - huge score, overs, CRR/RRR
+      3. BATSMEN cards (Striker + Non-striker)
+      4. BOWLER card
+      5. THIS OVER - recent balls horizontal strip
+      6. ACTION PANEL - run buttons, extras, wicket, undo
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary"
+    tools:context=".activity.LiveScoringActivity">
+
+    <!--  -->
+    <!-- TOOLBAR - Match title, innings, scorecard icon               -->
+    <!--  -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_live"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/bg_primary"
+        android:elevation="0dp"
+        app:subtitle="1st Innings - Team A vs Team B"
+        app:subtitleTextColor="@color/text_secondary"
+        app:navigationIconTint="@color/text_secondary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:subtitle="1st Innings - Warriors vs Lions">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="CricketHub"
+                android:textSize="@dimen/text_subtitle"
+                android:textColor="@color/green_primary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_live_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LIVE"
+                android:background="@drawable/bg_pill_wicket"
+                android:paddingHorizontal="6dp"
+                android:paddingVertical="2dp"
+                android:layout_marginStart="8dp"
+                android:textSize="10sp"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:letterSpacing="0.05" />
+        </LinearLayout>
+    </com.google.android.material.appbar.MaterialToolbar>
+
+    <!--  -->
+    <!-- LIVE INDICATOR                                                -->
+    <!--  -->
+
+
+    <!--  -->
+    <!-- SECTION 1: SCOREBOARD CARD                                   -->
+    <!-- Massive score display: "78/3"  "8.2 Overs"  "CRR 9.56"      -->
+    <!--  -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card_scoreboard"
+        style="@style/Widget.CricketHub.Card.Score"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_md"
+        android:layout_marginEnd="@dimen/spacing_md"
+        android:layout_marginTop="@dimen/spacing_sm"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_live"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <!-- MAIN SCORE - e.g., "156/4" -->
+            <TextView
+                android:id="@+id/tv_main_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0/0"
+                android:textSize="@dimen/text_score_primary"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-medium"
+                android:letterSpacing="-0.02"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="78/3" />
+
+            <!-- TARGET (2nd innings only) -->
+            <TextView
+                android:id="@+id/tv_target_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Target: 0"
+                android:textSize="@dimen/text_body"
+                android:textColor="@color/green_secondary"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/tv_main_score"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="Target: 142" />
+
+            <!-- Overs Display -->
+            <TextView
+                android:id="@+id/tv_overs"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.0 Overs"
+                android:textSize="@dimen/text_score_small"
+                android:textColor="@color/text_secondary"
+                android:layout_marginTop="@dimen/spacing_xs"
+                app:layout_constraintTop_toBottomOf="@id/tv_target_label"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                tools:text="8.2 Overs" />
+
+            <!-- Rate Row: CRR | spacer | RRR -->
+            <LinearLayout
+                android:id="@+id/layout_rates"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="@dimen/spacing_sm"
+                app:layout_constraintTop_toBottomOf="@id/tv_overs"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <!-- Current Run Rate -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_crr_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.00"
+                        android:textSize="@dimen/text_subtitle"
+                        android:textColor="@color/text_primary"
+                        android:textStyle="bold"
+                        tools:text="9.56" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/current_rr"
+                        android:textSize="@dimen/text_caption"
+                        android:textColor="@color/text_hint" />
+                </LinearLayout>
+
+                <!-- Center divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="32dp"
+                    android:background="@color/divider" />
+
+                <!-- Required Run Rate (2nd innings) -->
+                <LinearLayout
+                    android:id="@+id/layout_rrr"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/tv_rrr_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textSize="@dimen/text_subtitle"
+                        android:textColor="@color/text_primary"
+                        android:textStyle="bold"
+                        tools:text="11.20" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/required_rr"
+                        android:textSize="@dimen/text_caption"
+                        android:textColor="@color/text_hint" />
+                </LinearLayout>
+
+                <!-- Center divider 2 -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="32dp"
+                    android:background="@color/divider" />
+
+                <!-- Partnership score -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tv_partnership"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0(0)"
+                        android:textSize="@dimen/text_subtitle"
+                        android:textColor="@color/text_primary"
+                        android:textStyle="bold"
+                        tools:text="32(24)" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Partner."
+                        android:textSize="@dimen/text_caption"
+                        android:textColor="@color/text_hint" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!--  -->
+    <!-- MIDDLE SECTION: SCROLLABLE CARDS (Batsmen + Bowlers)         -->
+    <!--  -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_live_stats"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/card_scoreboard"
+        app:layout_constraintBottom_toTopOf="@id/layout_action_panel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/spacing_md">
+
+            <!-- COMBINED BATSMEN CARD -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_batsmen_combined"
+                style="@style/Widget.CricketHub.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_md"
+                android:layout_marginEnd="@dimen/spacing_md"
+                android:layout_marginTop="@dimen/spacing_sm">
+
+                <LinearLayout
+                    android:id="@+id/layout_batsmen"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <!-- Title Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="BATTERS"
+                            android:textSize="@dimen/text_label"
+                            android:textColor="@color/text_hint"
+                            android:letterSpacing="0.08" />
+                        <TextView
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:text="R"
+                            android:textSize="@dimen/text_label"
+                            android:textColor="@color/text_hint"
+                            android:gravity="end" />
+                        <TextView
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:text="B"
+                            android:textSize="@dimen/text_label"
+                            android:textColor="@color/text_hint"
+                            android:gravity="end" />
+                        <TextView
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:text="SR"
+                            android:textSize="@dimen/text_label"
+                            android:textColor="@color/text_hint"
+                            android:gravity="end" />
+                    </LinearLayout>
+
+                    <!-- STRIKER ROW -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:id="@+id/tv_striker_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Batsman 1 *"
+                            android:textSize="@dimen/text_body_lg"
+                            android:textColor="@color/green_primary"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            tools:text="R. Sharma *" />
+
+                        <TextView
+                            android:id="@+id/tv_striker_runs"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="@dimen/text_body_lg"
+                            android:textColor="@color/text_primary"
+                            android:textStyle="bold"
+                            android:gravity="end"
+                            tools:text="45" />
+
+                        <TextView
+                            android:id="@+id/tv_striker_balls"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="@dimen/text_body"
+                            android:textColor="@color/text_secondary"
+                            android:gravity="end"
+                            tools:text="32" />
+
+                        <TextView
+                            android:id="@+id/tv_striker_sr"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:text="0.0"
+                            android:textSize="@dimen/text_body"
+                            android:textColor="@color/text_hint"
+                            android:gravity="end"
+                            tools:text="140.6" />
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- NON-STRIKER ROW -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_non_striker_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Batsman 2"
+                            android:textSize="@dimen/text_body_lg"
+                            android:textColor="@color/text_secondary"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            tools:text="V. Kohli" />
+
+                        <TextView
+                            android:id="@+id/tv_non_striker_runs"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="@dimen/text_body_lg"
+                            android:textColor="@color/text_primary"
+                            android:textStyle="bold"
+                            android:gravity="end"
+                            tools:text="28" />
+
+                        <TextView
+                            android:id="@+id/tv_non_striker_balls"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="@dimen/text_body"
+                            android:textColor="@color/text_secondary"
+                            android:gravity="end"
+                            tools:text="21" />
+
+                        <TextView
+                            android:id="@+id/tv_non_striker_sr"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:text="0.0"
+                            android:textSize="@dimen/text_body"
+                            android:textColor="@color/text_hint"
+                            android:gravity="end"
+                            tools:text="133.3" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- BOWLER CARD -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_bowler"
+                style="@style/Widget.CricketHub.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_md"
+                android:layout_marginEnd="@dimen/spacing_md"
+                android:layout_marginTop="@dimen/spacing_xs">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <!-- Title Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:id="@+id/tv_bowler_label"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="BOWLER"
+                            android:textSize="@dimen/text_label"
+                            android:textColor="@color/text_hint"
+                            android:letterSpacing="0.08" />
+                        <TextView
+                            android:layout_width="35dp"
+                            android:layout_height="wrap_content"
+                            android:text="O"
+                            android:textSize="@dimen/text_label"
+                            android:textColor="@color/text_hint"
+                            android:gravity="end" />
+                        <TextView
+                            android:layout_width="35dp"
+                            android:layout_height="wrap_content"
+                            android:text="M"
+                            android:textSize="@dimen/text_label"
+                            android:textColor="@color/text_hint"
+                            android:gravity="end" />
+                        <TextView
+                            android:layout_width="35dp"
+                            android:layout_height="wrap_content"
+                            android:text="R"
+                            android:textSize="@dimen/text_label"
+                            android:textColor="@color/text_hint"
+                            android:gravity="end" />
+                        <TextView
+                            android:layout_width="35dp"
+                            android:layout_height="wrap_content"
+                            android:text="W"
+                            android:textSize="@dimen/text_label"
+                            android:textColor="@color/text_hint"
+                            android:gravity="end" />
+                        <TextView
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:text="ECO"
+                            android:textSize="@dimen/text_label"
+                            android:textColor="@color/text_hint"
+                            android:gravity="end" />
+                    </LinearLayout>
+
+                    <!-- Bowler Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:id="@+id/tv_bowler_name"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Bowler Name"
+                            android:textSize="@dimen/text_body_lg"
+                            android:textColor="@color/text_primary"
+                            android:textStyle="bold"
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            tools:text="M. Shami" />
+
+                        <!-- Overs -->
+                        <TextView
+                            android:id="@+id/tv_bowler_overs"
+                            android:layout_width="35dp"
+                            android:layout_height="wrap_content"
+                            android:text="0.0"
+                            android:textSize="@dimen/text_body_lg"
+                            android:textColor="@color/text_secondary"
+                            android:gravity="end"
+                            tools:text="4.0" />
+
+                        <!-- Maidens -->
+                        <TextView
+                            android:id="@+id/tv_bowler_maidens"
+                            android:layout_width="35dp"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="@dimen/text_body"
+                            android:textColor="@color/text_hint"
+                            android:gravity="end" />
+
+                        <!-- Runs -->
+                        <TextView
+                            android:id="@+id/tv_bowler_runs"
+                            android:layout_width="35dp"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="@dimen/text_body_lg"
+                            android:textColor="@color/text_secondary"
+                            android:gravity="end"
+                            tools:text="28" />
+
+                        <!-- Wickets -->
+                        <TextView
+                            android:id="@+id/tv_bowler_wickets"
+                            android:layout_width="35dp"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:textSize="@dimen/text_body_lg"
+                            android:textColor="@color/green_primary"
+                            android:textStyle="bold"
+                            android:gravity="end"
+                            tools:text="2" />
+
+                        <!-- Economy -->
+                        <TextView
+                            android:id="@+id/tv_bowler_eco"
+                            android:layout_width="50dp"
+                            android:layout_height="wrap_content"
+                            android:text="0.00"
+                            android:textSize="@dimen/text_body"
+                            android:textColor="@color/text_hint"
+                            android:gravity="end"
+                            tools:text="7.00" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- THIS OVER - Recent Balls Strip -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_this_over"
+                style="@style/Widget.CricketHub.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_md"
+                android:layout_marginEnd="@dimen/spacing_md"
+                android:layout_marginTop="@dimen/spacing_xs">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_xs">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/recent_balls"
+                        android:textSize="@dimen/text_label"
+                        android:textColor="@color/text_hint"
+                        android:letterSpacing="0.08"
+                        android:layout_marginBottom="@dimen/spacing_xs" />
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:scrollbars="none">
+
+                        <LinearLayout
+                            android:id="@+id/layout_ball_chips"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <TextView
+                                android:id="@+id/tv_no_balls_yet"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=". . . . . ."
+                                android:textSize="@dimen/text_subtitle"
+                                android:textColor="@color/text_hint"
+                                android:letterSpacing="0.3" />
+
+                        </LinearLayout>
+                    </HorizontalScrollView>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!--  -->
+    <!-- SECTION 4: ACTION PANEL - Runs, Extras, Wicket, Undo         -->
+    <!-- Takes ~40% of screen height                                   -->
+    <!--  -->
+    <LinearLayout
+        android:id="@+id/layout_action_panel"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:background="@color/bg_secondary"
+        android:paddingStart="@dimen/spacing_md"
+        android:paddingEnd="@dimen/spacing_md"
+        android:paddingTop="@dimen/spacing_sm"
+        android:paddingBottom="@dimen/spacing_md"
+        app:layout_constraintTop_toBottomOf="@id/scroll_live_stats"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.3">
+
+        <!-- section -->
+        <!-- ROW 1: RUN BUTTONS 0, 1, 2, 3, 4, 6                     -->
+        <!-- section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2.1"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/spacing_sm">
+
+            <!-- 0 -->
+            <TextView
+                android:id="@+id/btn_run_0"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:text="0"
+                android:textSize="@dimen/text_run_btn"
+                android:textColor="@color/text_secondary"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="@drawable/bg_run_button"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- 1 -->
+            <TextView
+                android:id="@+id/btn_run_1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:text="1"
+                android:textSize="@dimen/text_run_btn"
+                android:textColor="@color/green_primary"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="@drawable/bg_run_button"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- 2 -->
+            <TextView
+                android:id="@+id/btn_run_2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:text="2"
+                android:textSize="@dimen/text_run_btn"
+                android:textColor="@color/green_primary"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="@drawable/bg_run_button"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- 3 -->
+            <TextView
+                android:id="@+id/btn_run_3"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:text="3"
+                android:textSize="@dimen/text_run_btn"
+                android:textColor="@color/green_primary"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="@drawable/bg_run_button"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- 4 (boundary) -->
+            <TextView
+                android:id="@+id/btn_run_4"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_margin="4dp"
+                android:text="4"
+                android:textSize="@dimen/text_run_btn"
+                android:textColor="@color/text_on_green"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="@drawable/bg_ball_boundary"
+                android:clickable="true"
+                android:focusable="true" />
+
+            <!-- 6 (six! - larger & brighter) -->
+            <TextView
+                android:id="@+id/btn_run_6"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:layout_margin="4dp"
+                android:text="6"
+                android:textSize="26sp"
+                android:textColor="@color/text_on_green"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:background="@drawable/bg_ball_boundary"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </LinearLayout>
+
+        <!-- section -->
+        <!-- ROW 2: EXTRAS - Wide, No Ball, Bye, Leg Bye              -->
+        <!-- section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.2"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginBottom="@dimen/spacing_sm">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_wide"
+                style="@style/Widget.CricketHub.Button.Extra"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:text="WD"
+                android:textColor="@color/color_wide" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_no_ball"
+                style="@style/Widget.CricketHub.Button.Extra"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:text="NB"
+                android:textColor="@color/color_wide" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_bye"
+                style="@style/Widget.CricketHub.Button.Extra"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
+                android:text="BYE"
+                android:textColor="@color/text_secondary" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_leg_bye"
+                style="@style/Widget.CricketHub.Button.Extra"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:text="LB"
+                android:textColor="@color/text_secondary" />
+
+        </LinearLayout>
+
+        <!-- section -->
+        <!-- ROW 3: WICKET (prominent red) + UNDO + NEXT OVER         -->
+        <!-- section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1.4"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- UNDO button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_undo"
+                style="@style/Widget.CricketHub.Button.Secondary"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginEnd="@dimen/spacing_sm"
+                android:text="Undo"
+                android:textColor="@color/text_secondary" />
+
+            <!-- WICKET - large and red -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_wicket"
+                style="@style/Widget.CricketHub.Button.Wicket"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="2"
+                android:layout_marginEnd="@dimen/spacing_sm"
+                android:text="WICKET"
+                android:textColor="@color/text_primary" />
+
+            <!-- NEXT OVER button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_next_over"
+                style="@style/Widget.CricketHub.Button.Secondary"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1.2"
+                android:text="Next"
+                android:textColor="@color/green_primary" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

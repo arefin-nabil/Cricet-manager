@@ -1,0 +1,57 @@
+plugins {
+    alias(libs.plugins.android.application)
+}
+
+android {
+    namespace 'com.test.crickethub'
+    compileSdk 36
+
+    defaultConfig {
+        applicationId "com.test.crickethub"
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+    // AndroidX Core
+    implementation libs.appcompat
+    implementation libs.activity
+
+    // ConstraintLayout
+    implementation libs.constraintlayout
+
+    // Material Design 3 (includes MaterialCardView, MaterialButton, TabLayout,
+    //                      BottomNavigationView, ChipGroup, TextInputLayout, etc.)
+    implementation libs.material
+
+    // RecyclerView (for player lists, match history, ball events)
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+
+    // ViewPager2 (for scorecard tabs)
+    implementation 'androidx.viewpager2:viewpager2:1.1.0'
+
+    // Fragment (required by ViewPager2 with FragmentStateAdapter)
+    implementation 'androidx.fragment:fragment:1.6.2'
+
+    // Testing
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+}

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    activity_create_team.xml - Create / Edit Team Screen
+    Features: Team name input, logo placeholder, dynamic player list with RecyclerView
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary"
+    tools:context=".activity.CreateTeamActivity">
+
+    <!--  -->
+    <!-- TOOLBAR                                                       -->
+    <!--  -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_create_team"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/bg_primary"
+        app:title="@string/create_team_title"
+        app:titleTextColor="@color/text_primary"
+        app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
+        app:navigationIconTint="@color/text_secondary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--  -->
+    <!-- SCROLLABLE FORM CONTENT                                       -->
+    <!--  -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_create_team"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/spacing_xl"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_create_team"
+        app:layout_constraintBottom_toTopOf="@id/btn_save_team"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_md">
+
+            <!-- section -->
+            <!-- TEAM IDENTITY SECTION                                 -->
+            <!-- section -->
+
+            <!-- Green section label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TEAM IDENTITY"
+                android:textSize="@dimen/text_label"
+                android:textColor="@color/green_primary"
+                android:textStyle="bold"
+                android:letterSpacing="0.12"
+                android:layout_marginBottom="@dimen/spacing_sm" />
+
+            <!-- Logo + Name Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="@dimen/spacing_md">
+
+                <!-- Team Logo Placeholder -->
+                <ImageView
+                    android:id="@+id/iv_team_logo"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:background="@drawable/bg_team_logo"
+                    android:src="@android:drawable/ic_menu_camera"
+                    android:padding="16dp"
+                    android:scaleType="centerInside"
+                    android:layout_marginEnd="@dimen/spacing_md"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:contentDescription="Tap to set team logo" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/til_team_name"
+                    style="@style/Widget.CricketHub.TextInputLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="@string/team_name_hint">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_team_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        android:inputType="textCapWords"
+                        android:maxLines="1"
+                        android:imeOptions="actionNext" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_team_desc"
+                style="@style/Widget.CricketHub.TextInputLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_md"
+                android:hint="Team Description (Optional)">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_team_desc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:inputType="textMultiLine|textCapSentences"
+                    android:minLines="2"
+                    android:maxLines="4" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- section -->
+            <!-- PLAYERS SECTION HEADER                                -->
+            <!-- section -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="@dimen/spacing_sm">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="PLAYERS"
+                    android:textSize="@dimen/text_label"
+                    android:textColor="@color/green_primary"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.12" />
+
+                <!-- Player count badge -->
+                <TextView
+                    android:id="@+id/tv_player_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0 / 11"
+                    android:textSize="@dimen/text_caption"
+                    android:textColor="@color/text_secondary" />
+            </LinearLayout>
+
+            <!-- section -->
+            <!-- PLAYERS RECYCLERVIEW                                  -->
+            <!-- section -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_players"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_player_row"
+                tools:itemCount="4" />
+
+            <!-- Empty state -->
+            <TextView
+                android:id="@+id/tv_no_players"
+                android:layout_width="match_parent"
+                android:layout_height="64dp"
+                android:text="No players added yet"
+                android:textColor="@color/text_hint"
+                android:textSize="@dimen/text_body"
+                android:gravity="center"
+                android:visibility="visible" />
+
+            <!-- Add Player Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_add_player"
+                style="@style/Widget.CricketHub.Button.Secondary"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/touch_target_min"
+                android:layout_marginTop="@dimen/spacing_sm"
+                android:text="@string/add_player"
+                android:textColor="@color/green_primary" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!--  -->
+    <!-- SAVE TEAM BUTTON - Fixed at bottom                           -->
+    <!--  -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_save_team"
+        style="@style/Widget.CricketHub.Button.Primary"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/touch_target_min"
+        android:layout_marginStart="@dimen/spacing_md"
+        android:layout_marginEnd="@dimen/spacing_md"
+        android:layout_marginBottom="@dimen/spacing_lg"
+        android:text="@string/save_team"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

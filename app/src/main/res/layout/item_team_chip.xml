@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+    item_team_chip.xml - Small team chip for horizontal scroll on dashboard
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.CricketHub.Card"
+    android:layout_width="100dp"
+    android:layout_height="105dp"
+    android:layout_marginEnd="@dimen/spacing_sm"
+    android:clickable="true"
+    android:focusable="true">
+
+    <!-- Team chip content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="@dimen/spacing_sm">
+
+        <!-- Team logo circle -->
+        <ImageView
+            android:id="@+id/iv_team_logo_chip"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/bg_team_logo"
+            android:src="@android:drawable/ic_menu_manage"
+            android:padding="8dp"
+            android:contentDescription="Team logo" />
+
+        <!-- Team name -->
+        <TextView
+            android:id="@+id/tv_team_chip_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xs"
+            android:text="Team Name"
+            android:textSize="@dimen/text_caption"
+            android:textColor="@color/text_primary"
+            android:gravity="center"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

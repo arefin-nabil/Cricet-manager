@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:name=".CricketHubApp"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.CricketHub">
+
+        <!-- ======================================================= -->
+        <!-- Main Dashboard Activity (Launcher)                       -->
+        <!-- ======================================================= -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- ======================================================= -->
+        <!-- Create Team Screen                                        -->
+        <!-- ======================================================= -->
+        <activity
+            android:name=".activity.CreateTeamActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity" />
+
+        <!-- ======================================================= -->
+        <!-- Manage Teams Screen                                       -->
+        <!-- ======================================================= -->
+        <activity
+            android:name=".activity.ManageTeamsActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity" />
+
+        <!-- ======================================================= -->
+        <!-- Create Match Screen                                       -->
+        <!-- ======================================================= -->
+        <activity
+            android:name=".activity.CreateMatchActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity" />
+
+        <!-- ======================================================= -->
+        <!-- Live Scoring Screen — Keep screen ON during scoring      -->
+        <!-- ======================================================= -->
+        <activity
+            android:name=".activity.LiveScoringActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity" />
+
+        <!-- ======================================================= -->
+        <!-- Scorecard Screen                                          -->
+        <!-- ======================================================= -->
+        <activity
+            android:name=".activity.ScorecardActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity" />
+
+        <!-- ======================================================= -->
+        <!-- Match History Screen                                      -->
+        <!-- ======================================================= -->
+        <activity
+            android:name=".activity.MatchHistoryActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity" />
+
+        <!-- ======================================================= -->
+        <!-- Settings Screen                                           -->
+        <!-- ======================================================= -->
+        <activity
+            android:name=".activity.SettingsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:parentActivityName=".MainActivity" />
+
+    </application>
+
+</manifest>

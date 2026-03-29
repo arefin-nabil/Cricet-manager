@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    activity_create_match.xml - Match Setup Screen
+    Features: Team selectors, overs picker, playing XI, toss, start button
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary"
+    tools:context=".activity.CreateMatchActivity">
+
+    <!--  -->
+    <!-- TOOLBAR                                                       -->
+    <!--  -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar_create_match"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/toolbar_height"
+        android:background="@color/bg_primary"
+        app:title="@string/create_match_title"
+        app:titleTextColor="@color/text_primary"
+        app:navigationIcon="@android:drawable/ic_menu_close_clear_cancel"
+        app:navigationIconTint="@color/text_secondary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Green accent divider -->
+    <View
+        android:id="@+id/divider_toolbar"
+        android:layout_width="0dp"
+        android:layout_height="2dp"
+        android:background="@color/green_primary"
+        android:alpha="0.3"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_create_match"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!--  -->
+    <!-- SCROLLABLE FORM                                               -->
+    <!--  -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scroll_create_match"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/spacing_xl"
+        app:layout_constraintTop_toBottomOf="@id/divider_toolbar"
+        app:layout_constraintBottom_toTopOf="@id/btn_start_match"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_md">
+
+            <!-- section -->
+            <!-- TEAM SELECTION SECTION                                -->
+            <!-- section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TEAMS"
+                style="@style/TextAppearance.CricketHub.Label.Green"
+                android:layout_marginBottom="@dimen/spacing_sm" />
+
+            <!-- Team A Selector Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_team_a"
+                style="@style/Widget.CricketHub.Card"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/touch_target_min"
+                android:layout_marginBottom="@dimen/spacing_sm"
+                android:clickable="true"
+                android:focusable="true">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingStart="@dimen/spacing_md"
+                    android:paddingEnd="@dimen/spacing_md">
+
+                    <ImageView
+                        android:id="@+id/iv_team_a_logo"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_team_logo"
+                        android:src="@android:drawable/ic_menu_manage"
+                        android:padding="6dp"
+                        android:contentDescription="Team A logo"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Team A"
+                        android:textSize="@dimen/text_caption"
+                        android:textColor="@color/text_hint"
+                        android:layout_marginStart="@dimen/spacing_sm"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/iv_team_a_logo"
+                        app:layout_constraintBottom_toTopOf="@id/tv_team_a_selected" />
+
+                    <TextView
+                        android:id="@+id/tv_team_a_selected"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select_team_a"
+                        android:textSize="@dimen/text_body_lg"
+                        android:textColor="@color/text_primary"
+                        android:textStyle="bold"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:layout_marginStart="@dimen/spacing_sm"
+                        app:layout_constraintTop_toBottomOf="@id/tv_team_a_label"
+                        app:layout_constraintStart_toEndOf="@id/iv_team_a_logo"
+                        app:layout_constraintEnd_toStartOf="@id/iv_team_a_arrow"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                    <!-- Hidden helper for constraint -->
+                    <TextView
+                        android:id="@+id/tv_team_a_label"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
+                        android:visibility="invisible"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/iv_team_a_logo"
+                        app:layout_constraintEnd_toEndOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/iv_team_a_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_menu_more"
+                        android:contentDescription="Select"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- VS Label -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="VS"
+                android:textSize="@dimen/text_body"
+                android:textColor="@color/text_hint"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:layout_marginBottom="@dimen/spacing_sm" />
+
+            <!-- Team B Selector Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/card_team_b"
+                style="@style/Widget.CricketHub.Card"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/touch_target_min"
+                android:layout_marginBottom="@dimen/spacing_lg"
+                android:clickable="true"
+                android:focusable="true">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingStart="@dimen/spacing_md"
+                    android:paddingEnd="@dimen/spacing_md">
+
+                    <ImageView
+                        android:id="@+id/iv_team_b_logo"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:background="@drawable/bg_team_logo"
+                        android:src="@android:drawable/ic_menu_manage"
+                        android:padding="6dp"
+                        android:contentDescription="Team B logo"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_team_b_selected"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:text="@string/select_team_b"
+                        android:textSize="@dimen/text_body_lg"
+                        android:textColor="@color/text_secondary"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:layout_marginStart="@dimen/spacing_sm"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/iv_team_b_logo"
+                        app:layout_constraintEnd_toStartOf="@id/iv_team_b_arrow"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/iv_team_b_arrow"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@android:drawable/ic_menu_more"
+                        android:contentDescription="Select"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- section -->
+            <!-- OVERS SELECTION SECTION                               -->
+            <!-- section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="OVERS"
+                style="@style/TextAppearance.CricketHub.Label.Green"
+                android:layout_marginBottom="@dimen/spacing_sm" />
+
+            <!-- Chip Group for quick over selection -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_overs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_md"
+                app:singleSelection="true">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_5_overs"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/extra_btn_height"
+                    android:text="5 Overs"
+                    android:textColor="@color/text_primary"
+                    app:chipBackgroundColor="@color/bg_card"
+                    app:chipStrokeColor="@color/stroke_card"
+                    app:checkedIconTint="@color/green_primary"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_10_overs"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/extra_btn_height"
+                    android:text="10 Overs"
+                    android:textColor="@color/text_primary"
+                    app:chipBackgroundColor="@color/bg_card"
+                    app:chipStrokeColor="@color/stroke_card"
+                    app:checkedIconTint="@color/green_primary"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_15_overs"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/extra_btn_height"
+                    android:text="15 Overs"
+                    android:textColor="@color/text_primary"
+                    app:chipBackgroundColor="@color/bg_card"
+                    app:chipStrokeColor="@color/stroke_card"
+                    app:checkedIconTint="@color/green_primary"
+                    app:chipStrokeWidth="1dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_20_overs"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/extra_btn_height"
+                    android:text="T20"
+                    android:textColor="@color/text_primary"
+                    android:checked="true"
+                    app:chipBackgroundColor="@color/bg_card"
+                    app:chipStrokeColor="@color/stroke_card"
+                    app:checkedIconTint="@color/green_primary"
+                    app:chipStrokeWidth="1dp" />
+
+
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chip_custom_overs"
+                    style="@style/Widget.Material3.Chip.Filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/extra_btn_height"
+                    android:text="Custom"
+                    android:textColor="@color/text_primary"
+                    app:chipBackgroundColor="@color/bg_card"
+                    app:chipStrokeColor="@color/stroke_card"
+                    app:checkedIconTint="@color/green_primary"
+                    app:chipStrokeWidth="1dp" />
+
+            </com.google.android.material.chip.ChipGroup>
+
+            <!-- Custom Overs Input (shown when Custom selected) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_custom_overs"
+                style="@style/Widget.CricketHub.TextInputLayout"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:hint="Enter Overs (e.g., 15)"
+                android:layout_marginBottom="@dimen/spacing_md"
+                android:visibility="gone">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_custom_overs"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/text_primary"
+                    android:inputType="number"
+                    android:maxLength="3" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- section -->
+            <!-- TOSS SECTION                                          -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TOSS"
+                android:textSize="@dimen/text_label"
+                android:textColor="@color/green_primary"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:layout_marginTop="@dimen/spacing_lg"
+                android:layout_marginBottom="@dimen/spacing_sm" />
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.CricketHub.Card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_md">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <!-- Toggle for Random vs Manual Toss -->
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/switch_random_toss"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Use Random Coin Flip"
+                        android:checked="true"
+                        android:textColor="@color/text_primary"
+                        android:textSize="@dimen/text_body"
+                        android:layout_marginBottom="12dp" />
+
+                    <!-- Randomized Toss Views (Visible when Switch is ON) -->
+                    <LinearLayout
+                        android:id="@+id/layout_random_toss"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_marginBottom="@dimen/spacing_xs">
+                        
+                        <TextView
+                            android:id="@+id/tv_toss_result"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Toss: Pending"
+                            android:gravity="center"
+                            android:textSize="@dimen/text_body"
+                            android:textColor="@color/text_hint"
+                            android:layout_marginBottom="8dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_run_toss"
+                            style="@style/Widget.Material3.Button.TonalButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="@dimen/touch_target_min"
+                            android:text="Run Toss"
+                            android:textColor="@color/green_primary" />
+                    </LinearLayout>
+
+                    <!-- Manual Toss Selection (Visible when Switch is OFF) -->
+                    <LinearLayout
+                        android:id="@+id/layout_manual_toss"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginBottom="@dimen/spacing_xs">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Who won the toss?"
+                            android:textSize="@dimen/text_body"
+                            android:textColor="@color/text_secondary"
+                            android:layout_marginBottom="8dp" />
+
+                        <com.google.android.material.button.MaterialButtonToggleGroup
+                            android:id="@+id/group_manual_toss"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:singleSelection="true"
+                            app:selectionRequired="true">
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_manual_team_a"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Team A" />
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btn_manual_team_b"
+                                style="@style/Widget.Material3.Button.OutlinedButton"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="Team B" />
+                        </com.google.android.material.button.MaterialButtonToggleGroup>
+                    </LinearLayout>
+
+                    <!-- Elected To -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Elected to:"
+                        android:textSize="@dimen/text_body"
+                        android:textColor="@color/text_secondary"
+                        android:layout_marginBottom="@dimen/spacing_xs" />
+
+                    <!-- Bat / Bowl Toggle -->
+                    <com.google.android.material.button.MaterialButtonToggleGroup
+                        android:id="@+id/toggle_toss_election"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:singleSelection="true"
+                        app:checkedButton="@id/btn_toss_bat">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_toss_bat"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/touch_target_min"
+                            android:layout_weight="1"
+                            android:text="Bat"
+                            android:textColor="@color/text_primary" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_toss_bowl"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/touch_target_min"
+                            android:layout_weight="1"
+                            android:text="Bowl"
+                            android:textColor="@color/text_primary" />
+
+                    </com.google.android.material.button.MaterialButtonToggleGroup>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!--  -->
+    <!-- START MATCH BUTTON - Fixed at bottom                         -->
+    <!--  -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_start_match"
+        style="@style/Widget.CricketHub.Button.Primary"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/touch_target_min"
+        android:layout_marginStart="@dimen/spacing_md"
+        android:layout_marginEnd="@dimen/spacing_md"
+        android:layout_marginBottom="@dimen/spacing_lg"
+        android:text="@string/start_match"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

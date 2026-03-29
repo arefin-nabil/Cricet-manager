@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ============================================================ -->
+    <!-- CricketHub - Material 3 Dark Theme Styles                   -->
+    <!-- ============================================================ -->
+
+    <!-- Base Application Theme -->
+    <style name="Theme.CricketHub" parent="Theme.Material3.Dark.NoActionBar">
+        <!-- Primary color (cricket green) -->
+        <item name="colorPrimary">@color/green_primary</item>
+        <item name="colorPrimaryVariant">@color/green_dark</item>
+        <item name="colorOnPrimary">@color/text_on_green</item>
+
+        <!-- Secondary color -->
+        <item name="colorSecondary">@color/green_secondary</item>
+        <item name="colorSecondaryVariant">@color/green_dark</item>
+        <item name="colorOnSecondary">@color/text_on_green</item>
+
+        <!-- Background / Surface -->
+        <item name="android:colorBackground">@color/bg_primary</item>
+        <item name="colorSurface">@color/bg_secondary</item>
+        <item name="colorOnSurface">@color/text_primary</item>
+        <item name="colorOnBackground">@color/text_primary</item>
+
+        <!-- Status bar -->
+        <item name="android:statusBarColor">@color/bg_primary</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:navigationBarColor">@color/bg_primary</item>
+
+        <!-- Elevation overlay (darken surfaces) -->
+        <item name="elevationOverlayEnabled">true</item>
+
+        <!-- Error color -->
+        <item name="colorError">@color/color_wicket</item>
+        <item name="colorOnError">@color/text_primary</item>
+
+        <!-- Toolbar -->
+        <item name="toolbarStyle">@style/Widget.CricketHub.Toolbar</item>
+
+        <!-- Ripple -->
+        <item name="colorControlHighlight">@color/green_dim</item>
+
+        <!-- Window properties -->
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- Toolbar Style                                                -->
+    <!-- ============================================================ -->
+    <style name="Widget.CricketHub.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="android:background">@color/bg_primary</item>
+        <item name="titleTextColor">@color/text_primary</item>
+        <item name="subtitleTextColor">@color/text_secondary</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- MaterialCardView - Standard Card                             -->
+    <!-- ============================================================ -->
+    <style name="Widget.CricketHub.Card" parent="Widget.Material3.CardView.Filled">
+        <item name="cardBackgroundColor">@color/bg_card</item>
+        <item name="cardElevation">@dimen/elevation_card</item>
+        <item name="cardCornerRadius">@dimen/radius_lg</item>
+        <item name="strokeColor">@color/stroke_card</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
+        <item name="contentPadding">@dimen/spacing_md</item>
+    </style>
+
+    <!-- Score Highlight Card -->
+    <style name="Widget.CricketHub.Card.Score" parent="Widget.CricketHub.Card">
+        <item name="cardBackgroundColor">@color/bg_surface</item>
+        <item name="cardElevation">4dp</item>
+        <item name="strokeColor">@color/border_green</item>
+        <item name="strokeWidth">@dimen/stroke_width_thick</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- Buttons                                                      -->
+    <!-- ============================================================ -->
+
+    <!-- Primary Action Button (large, green) -->
+    <style name="Widget.CricketHub.Button.Primary" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/green_primary</item>
+        <item name="android:textColor">@color/text_on_green</item>
+        <item name="android:textSize">@dimen/text_body_lg</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minHeight">@dimen/touch_target_min</item>
+        <item name="cornerRadius">@dimen/radius_lg</item>
+        <item name="android:letterSpacing">0.05</item>
+    </style>
+
+    <!-- Run Button (circular, large) -->
+    <style name="Widget.CricketHub.Button.Run" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/btn_run</item>
+        <item name="android:textColor">@color/green_primary</item>
+        <item name="android:textSize">@dimen/text_run_btn</item>
+        <item name="android:textStyle">bold</item>
+        <item name="cornerRadius">50dp</item>
+        <item name="android:minWidth">@dimen/run_btn_size</item>
+        <item name="android:minHeight">@dimen/run_btn_size</item>
+        <item name="strokeColor">@color/green_primary</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
+    </style>
+
+    <!-- Wicket Button (red, prominent) -->
+    <style name="Widget.CricketHub.Button.Wicket" parent="Widget.Material3.Button">
+        <item name="android:backgroundTint">@color/btn_wicket</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textSize">@dimen/text_body_lg</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minHeight">@dimen/touch_target_min</item>
+        <item name="cornerRadius">@dimen/radius_md</item>
+        <item name="android:letterSpacing">0.1</item>
+    </style>
+
+    <!-- Extra Button (subtle) -->
+    <style name="Widget.CricketHub.Button.Extra" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:minHeight">@dimen/extra_btn_height</item>
+        <item name="cornerRadius">@dimen/radius_md</item>
+        <item name="strokeColor">@color/stroke_card</item>
+        <item name="strokeWidth">@dimen/stroke_width</item>
+    </style>
+
+    <!-- Undo / Secondary Button -->
+    <style name="Widget.CricketHub.Button.Secondary" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="android:minHeight">@dimen/touch_target_min</item>
+        <item name="cornerRadius">@dimen/radius_md</item>
+        <item name="strokeColor">@color/stroke_card</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- TextInputLayout Style                                        -->
+    <!-- ============================================================ -->
+    <style name="Widget.CricketHub.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox">
+        <item name="boxBackgroundColor">@color/bg_card</item>
+        <item name="boxStrokeColor">@color/stroke_card</item>
+        <item name="hintTextColor">@color/text_hint</item>
+        <item name="android:textColorHint">@color/text_hint</item>
+        <item name="boxCornerRadiusTopStart">@dimen/radius_sm</item>
+        <item name="boxCornerRadiusTopEnd">@dimen/radius_sm</item>
+        <item name="boxCornerRadiusBottomStart">@dimen/radius_sm</item>
+        <item name="boxCornerRadiusBottomEnd">@dimen/radius_sm</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- Typography Styles                                            -->
+    <!-- ============================================================ -->
+
+    <style name="TextAppearance.CricketHub.Score" parent="TextAppearance.Material3.DisplayLarge">
+        <item name="android:textSize">@dimen/text_score_primary</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="TextAppearance.CricketHub.ScoreSmall" parent="TextAppearance.Material3.HeadlineMedium">
+        <item name="android:textSize">@dimen/text_score_small</item>
+        <item name="android:textColor">@color/text_secondary</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="TextAppearance.CricketHub.Headline" parent="TextAppearance.Material3.HeadlineSmall">
+        <item name="android:textSize">@dimen/text_headline</item>
+        <item name="android:textColor">@color/text_primary</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="TextAppearance.CricketHub.Label.Green" parent="TextAppearance.Material3.LabelLarge">
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:textColor">@color/green_primary</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.1</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TextAppearance.CricketHub.Caption" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textSize">@dimen/text_caption</item>
+        <item name="android:textColor">@color/text_secondary</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- TabLayout Style                                              -->
+    <!-- ============================================================ -->
+    <style name="Widget.CricketHub.TabLayout" parent="Widget.Material3.TabLayout">
+        <item name="tabBackground">@color/bg_secondary</item>
+        <item name="tabSelectedTextColor">@color/green_primary</item>
+        <item name="tabTextColor">@color/text_secondary</item>
+        <item name="tabIndicatorColor">@color/green_primary</item>
+        <item name="tabIndicatorHeight">3dp</item>
+        <item name="tabTextAppearance">@style/TextAppearance.CricketHub.Tab</item>
+    </style>
+
+    <style name="TextAppearance.CricketHub.Tab" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">@dimen/text_body</item>
+        <item name="textAllCaps">true</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- BottomNavigationView Style                                   -->
+    <!-- ============================================================ -->
+    <style name="Widget.CricketHub.BottomNav" parent="Widget.Material3.BottomNavigationView">
+        <item name="backgroundTint">@color/bg_secondary</item>
+        <item name="itemIconTint">@color/nav_color_state</item>
+        <item name="itemTextColor">@color/nav_color_state</item>
+        <item name="itemActiveIndicatorStyle">@style/Widget.CricketHub.BottomNav.Indicator</item>
+    </style>
+
+    <style name="Widget.CricketHub.BottomNav.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/green_dim</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.CricketHub.Indicator</item>
+    </style>
+
+    <style name="ShapeAppearance.CricketHub.Indicator" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- Dialog Style                                                 -->
+    <!-- ============================================================ -->
+    <style name="Theme.CricketHub.Dialog" parent="Theme.Material3.Dark.Dialog">
+        <item name="android:backgroundDimAmount">0.7</item>
+        <item name="colorSurface">@color/bg_card</item>
+    </style>
+</resources>

@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ============================================================ -->
+    <!-- CricketHub Dimensions                                        -->
+    <!-- ============================================================ -->
+
+    <!-- Spacing -->
+    <dimen name="spacing_xs">4dp</dimen>
+    <dimen name="spacing_sm">8dp</dimen>
+    <dimen name="spacing_md">16dp</dimen>
+    <dimen name="spacing_lg">24dp</dimen>
+    <dimen name="spacing_xl">32dp</dimen>
+    <dimen name="spacing_xxl">48dp</dimen>
+
+    <!-- Corner Radius -->
+    <dimen name="radius_sm">8dp</dimen>
+    <dimen name="radius_md">12dp</dimen>
+    <dimen name="radius_lg">16dp</dimen>
+    <dimen name="radius_xl">24dp</dimen>
+    <dimen name="radius_circle">50dp</dimen>
+
+    <!-- Card Elevation -->
+    <dimen name="elevation_card">2dp</dimen>
+    <dimen name="elevation_fab">6dp</dimen>
+    <dimen name="elevation_dialog">8dp</dimen>
+
+    <!-- Touch Targets (minimum 56dp) -->
+    <dimen name="touch_target_min">56dp</dimen>
+    <dimen name="run_btn_size">72dp</dimen>
+    <dimen name="extra_btn_height">52dp</dimen>
+    <dimen name="nav_height">64dp</dimen>
+
+    <!-- Typography - Score Display -->
+    <dimen name="text_score_primary">48sp</dimen>
+    <dimen name="text_score_secondary">28sp</dimen>
+    <dimen name="text_score_small">20sp</dimen>
+
+    <!-- Typography - General -->
+    <dimen name="text_headline">24sp</dimen>
+    <dimen name="text_title">20sp</dimen>
+    <dimen name="text_subtitle">18sp</dimen>
+    <dimen name="text_body_lg">16sp</dimen>
+    <dimen name="text_body">14sp</dimen>
+    <dimen name="text_caption">12sp</dimen>
+    <dimen name="text_label">11sp</dimen>
+
+    <!-- Run Button Typography -->
+    <dimen name="text_run_btn">22sp</dimen>
+
+    <!-- Toolbar -->
+    <dimen name="toolbar_height">56dp</dimen>
+
+    <!-- Card -->
+    <dimen name="card_padding">16dp</dimen>
+    <dimen name="card_margin">8dp</dimen>
+
+    <!-- Stroke Width -->
+    <dimen name="stroke_width">1dp</dimen>
+    <dimen name="stroke_width_thick">2dp</dimen>
+
+    <!-- Ball Event Chip -->
+    <dimen name="ball_chip_size">36dp</dimen>
+    <dimen name="ball_chip_text">13sp</dimen>
+</resources>
