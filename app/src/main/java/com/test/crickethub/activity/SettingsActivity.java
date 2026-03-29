@@ -3,6 +3,7 @@ package com.test.crickethub.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class SettingsActivity extends AppCompatActivity {
         findViewById(R.id.btn_rate_app).setOnClickListener(v -> {
             Toast.makeText(this, "Rating coming soon!", Toast.LENGTH_SHORT).show();
         });
+
 
         findViewById(R.id.btn_share_app).setOnClickListener(v -> {
             Intent shareIntent = new Intent(Intent.ACTION_SEND);

@@ -51,18 +51,19 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
             // 1. Top Insets (Toolbar)
             findViewById(R.id.app_bar_main).setPadding(0, systemBars.top, 0, 0);
             
-            // 2. Bottom Nav Positioning (Above system buttons)
-            if (bottomNav.getLayoutParams() instanceof android.view.ViewGroup.MarginLayoutParams) {
-                android.view.ViewGroup.MarginLayoutParams lp = (android.view.ViewGroup.MarginLayoutParams) bottomNav.getLayoutParams();
-                lp.bottomMargin = systemBars.bottom;
-                bottomNav.setLayoutParams(lp);
-            }
+            // 2. Bottom Nav Positioning (Extend height and add padding for system bar)
+            bottomNav.setPadding(0, 0, 0, systemBars.bottom);
+            android.view.ViewGroup.LayoutParams navLp = bottomNav.getLayoutParams();
+            // Add an extra 8dp (converted to px) buffer to prevent label cropping
+            int bufferPx = (int) (8 * getResources().getDisplayMetrics().density);
+            navLp.height = navHeightPx + systemBars.bottom + bufferPx;
+            bottomNav.setLayoutParams(navLp);
             
             // 3. Content Area Positioning (Above Bottom Nav)
             if (findViewById(R.id.main_content_area).getLayoutParams() instanceof android.view.ViewGroup.MarginLayoutParams) {
-                android.view.ViewGroup.MarginLayoutParams lp = (android.view.ViewGroup.MarginLayoutParams) findViewById(R.id.main_content_area).getLayoutParams();
-                lp.bottomMargin = navHeightPx + systemBars.bottom;
-                findViewById(R.id.main_content_area).setLayoutParams(lp);
+                android.view.ViewGroup.MarginLayoutParams contentLp = (android.view.ViewGroup.MarginLayoutParams) findViewById(R.id.main_content_area).getLayoutParams();
+                contentLp.bottomMargin = navHeightPx + systemBars.bottom;
+                findViewById(R.id.main_content_area).setLayoutParams(contentLp);
             }
             
             return insets;
@@ -81,14 +82,14 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
         ColorStateList navColors = ContextCompat.getColorStateList(this, R.color.nav_color_state);
         bottomNav.setItemIconTintList(navColors);
         bottomNav.setItemTextColor(navColors);
-        bottomNav.setItemActiveIndicatorEnabled(false);
         
-        // Force-tint each menu icon individually as a belt-and-suspenders approach for PNGs
+        // Force icons to be treated as templates for reliable tinting
         android.view.Menu menu = bottomNav.getMenu();
         for (int i = 0; i < menu.size(); i++) {
             android.view.MenuItem item = menu.getItem(i);
             if (item.getIcon() != null) {
-                item.getIcon().setTintList(navColors);
+                // This forces the drawable to use the tint list
+                androidx.core.graphics.drawable.DrawableCompat.setTintList(item.getIcon(), navColors);
             }
         }
         

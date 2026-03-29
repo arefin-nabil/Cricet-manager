@@ -61,7 +61,7 @@
                         android:layout_height="wrap_content"
                         android:text="Dark Mode"
                         android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_body" />
+                        android:textSize="@dimen/text_body_lg" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -96,15 +96,36 @@
                         android:focusable="true"
                         android:background="?attr/selectableItemBackground"
                         android:paddingHorizontal="12dp">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/rate"
+                            android:contentDescription="@null"
+                            app:tint="@color/text_primary" />
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:layout_marginStart="15dp"
                             android:text="Rate App"
+                            android:textSize="@dimen/text_body_lg"
                             android:textColor="@color/text_primary" />
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/arrow"
+                            android:contentDescription="@null"
+                            app:tint="@color/text_secondary" />
+
                     </LinearLayout>
 
-                    <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/bg_secondary" />
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/bg_secondary" />
 
                     <LinearLayout
                         android:id="@+id/btn_share_app"
@@ -116,13 +137,32 @@
                         android:focusable="true"
                         android:background="?attr/selectableItemBackground"
                         android:paddingHorizontal="12dp">
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:src="@drawable/share"
+                            android:contentDescription="@null"
+                            app:tint="@color/text_primary" />
+
                         <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:layout_marginStart="15dp"
                             android:text="Share App"
+                            android:textSize="@dimen/text_body_lg"
                             android:textColor="@color/text_primary" />
+
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:src="@drawable/arrow"
+                            android:contentDescription="@null"
+                            app:tint="@color/text_secondary" />
+
                     </LinearLayout>
+
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
