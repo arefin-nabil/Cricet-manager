@@ -1,61 +1,58 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- ============================================================ -->
-    <!-- CricketHub Color Palette - Dark Cricket Green Theme          -->
+    <!-- CricketHub Color Palette - LIGHT MODE (Default)             -->
     <!-- ============================================================ -->
 
-    <!-- Primary Backgrounds -->
-    <color name="bg_primary">#FF121212</color>
-    <color name="bg_secondary">#FF1E1E1E</color>
-    <color name="bg_card">#FF252525</color>
-    <color name="bg_surface">#FF2C2C2C</color>
+    <!-- Primary Backgrounds (Light/Soft off-white) -->
+    <color name="bg_primary">#FFF8F9FA</color>
+    <color name="bg_secondary">#FFFFFFFF</color>
+    <color name="bg_card">#FFFFFFFF</color>
+    <color name="bg_surface">#FFF1F3F4</color>
 
-    <!-- Cricket Green Accents -->
+    <!-- Cricket Green Accents (Main Brand Color) -->
     <color name="green_primary">#FF00C853</color>
     <color name="green_secondary">#FF00E676</color>
     <color name="green_dark">#FF009624</color>
-    <color name="green_dim">#2600C853</color>
+    <color name="green_dim">#1A00C853</color>
 
-    <!-- Text Colors -->
-    <color name="text_primary">#FFFFFFFF</color>
-    <color name="text_secondary">#FFB0B0B0</color>
-    <color name="text_hint">#FF757575</color>
-    <color name="text_on_green">#FF000000</color>
+    <!-- Text Colors (High Contrast for Light mode) -->
+    <color name="text_primary">#FF202124</color>
+    <color name="text_secondary">#FF5F6368</color>
+    <color name="text_hint">#FF9AA0A6</color>
+    <color name="text_on_green">#FFFFFFFF</color>
 
     <!-- Semantic Colors -->
-    <color name="color_boundary">#FF00C853</color>      <!-- 4s and 6s -->
-    <color name="color_wicket">#FFFF1744</color>         <!-- Wicket events -->
-    <color name="color_wide">#FFFFAB00</color>           <!-- Wide/No-ball -->
-    <color name="color_dot">#FF424242</color>            <!-- Dot ball -->
-    <color name="color_run">#FF37474F</color>            <!-- Normal 1,2,3 runs -->
+    <color name="color_boundary">#FF00C853</color>
+    <color name="color_wicket">#FFD93025</color>
+    <color name="color_wide">#FFF9AB00</color>
+    <color name="color_dot">#FFBDC1C6</color>
+    <color name="color_run">#FFE8EAED</color>
 
     <!-- Action Colors -->
-    <color name="btn_run">#FF1E2A23</color>
-    <color name="btn_wicket">#FFFF1744</color>
-    <color name="btn_extra">#FF263238</color>
-    <color name="btn_undo">#FF37474F</color>
+    <color name="btn_run">#FFECF3EF</color>
+    <color name="btn_wicket">#FFFCE8E6</color>
+    <color name="btn_extra">#FFF8F9FA</color>
+    <color name="btn_undo">#FFF1F3F4</color>
 
-    <!-- Material Theme Colors (required by Material Components) -->
+    <!-- Material Theme Colors -->
     <color name="colorPrimary">#FF00C853</color>
     <color name="colorPrimaryDark">#FF009624</color>
-    <color name="colorPrimaryVariant">#FF009624</color>
     <color name="colorSecondary">#FF00E676</color>
-    <color name="colorSecondaryVariant">#FF00B248</color>
-    <color name="colorOnPrimary">#FF000000</color>
-    <color name="colorOnSecondary">#FF000000</color>
-    <color name="colorError">#FFFF1744</color>
-    <color name="colorOnError">#FFFFFFFF</color>
-    <color name="colorBackground">#FF121212</color>
-    <color name="colorOnBackground">#FFFFFFFF</color>
-    <color name="colorSurface">#FF1E1E1E</color>
-    <color name="colorOnSurface">#FFFFFFFF</color>
+    <color name="colorOnPrimary">#FFFFFFFF</color>
+    <color name="colorOnSecondary">#FFFFFFFF</color>
+    <color name="colorError">#FFD93025</color>
+    <color name="colorBackground">#FFF8F9FA</color>
+    <color name="colorOnBackground">#FF202124</color>
+    <color name="colorSurface">#FFFFFFFF</color>
+    <color name="colorOnSurface">#FF202124</color>
 
     <!-- Bottom Navigation -->
     <color name="nav_active">#FF00C853</color>
-    <color name="nav_inactive">#FF757575</color>
+    <color name="nav_inactive">#FF5F6368</color>
 
     <!-- Divider & Borders -->
-    <color name="divider">#FF2C2C2C</color>
-    <color name="border_green">#4D00C853</color>
-    <color name="stroke_card">#FF303030</color>
+    <color name="divider">#FFE8EAED</color>
+    <color name="border_green">#3300C853</color>
+    <color name="stroke_card">#FFE0E0E0</color>
 </resources>

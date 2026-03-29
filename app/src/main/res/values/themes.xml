@@ -5,7 +5,7 @@
     <!-- ============================================================ -->
 
     <!-- Base Application Theme -->
-    <style name="Theme.CricketHub" parent="Theme.Material3.Dark.NoActionBar">
+    <style name="Theme.CricketHub" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Primary color (cricket green) -->
         <item name="colorPrimary">@color/green_primary</item>
         <item name="colorPrimaryVariant">@color/green_dark</item>
@@ -22,12 +22,15 @@
         <item name="colorOnSurface">@color/text_primary</item>
         <item name="colorOnBackground">@color/text_primary</item>
 
-        <!-- Status bar -->
+        <!-- Status bar & Navigation Bar -->
         <item name="android:statusBarColor">@color/bg_primary</item>
-        <item name="android:windowLightStatusBar">false</item>
         <item name="android:navigationBarColor">@color/bg_primary</item>
+        
+        <!-- These ensures status/nav icons are dark in light mode and light in dark mode -->
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
 
-        <!-- Elevation overlay (darken surfaces) -->
+        <!-- Elevation overlay (darken surfaces in dark mode only) -->
         <item name="elevationOverlayEnabled">true</item>
 
         <!-- Error color -->
@@ -205,10 +208,10 @@
     <!-- BottomNavigationView Style                                   -->
     <!-- ============================================================ -->
     <style name="Widget.CricketHub.BottomNav" parent="Widget.Material3.BottomNavigationView">
-        <item name="backgroundTint">@color/bg_secondary</item>
+        <item name="android:background">@color/bg_secondary</item>
         <item name="itemIconTint">@color/nav_color_state</item>
         <item name="itemTextColor">@color/nav_color_state</item>
-        <item name="itemActiveIndicatorStyle">@style/Widget.CricketHub.BottomNav.Indicator</item>
+        <item name="itemActiveIndicatorStyle">@null</item>
     </style>
 
     <style name="Widget.CricketHub.BottomNav.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">

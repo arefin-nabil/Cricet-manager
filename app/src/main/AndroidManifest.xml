@@ -37,17 +37,6 @@
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" />
 
-        <!-- ======================================================= -->
-        <!-- Manage Teams Screen                                       -->
-        <!-- ======================================================= -->
-        <activity
-            android:name=".activity.ManageTeamsActivity"
-            android:exported="false"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity" />
-
-        <!-- ======================================================= -->
         <!-- Create Match Screen                                       -->
         <!-- ======================================================= -->
         <activity
@@ -76,15 +65,6 @@
             android:parentActivityName=".MainActivity" />
 
         <!-- ======================================================= -->
-        <!-- Match History Screen                                      -->
-        <!-- ======================================================= -->
-        <activity
-            android:name=".activity.MatchHistoryActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:parentActivityName=".MainActivity" />
-
-        <!-- ======================================================= -->
         <!-- Settings Screen                                           -->
         <!-- ======================================================= -->
         <activity
@@ -92,6 +72,7 @@
             android:exported="false"
             android:screenOrientation="portrait"
             android:parentActivityName=".MainActivity" />
+
 
     </application>
 

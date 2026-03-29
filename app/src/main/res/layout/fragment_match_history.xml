@@ -1,32 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-    activity_match_history.xml - Match History Screen
-    Shows list of all completed matches with scores and results
--->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_primary"
-    tools:context=".activity.MatchHistoryActivity">
+    android:background="@color/bg_primary">
 
-    <!-- TOOLBAR with Sync button -->
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar_history"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/toolbar_height"
-        android:background="@color/bg_primary"
-        app:title="@string/history_title"
-        app:titleTextColor="@color/text_primary"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- Search / Filter bar -->
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/til_search_history"
+        android:id="@+id/til_search_history_fragment"
         style="@style/Widget.CricketHub.TextInputLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -36,12 +19,12 @@
         android:hint="Search matches..."
         app:startIconDrawable="@android:drawable/ic_menu_search"
         app:startIconTint="@color/text_hint"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_history"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/et_search_history"
+            android:id="@+id/et_search_history_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_primary"
@@ -49,9 +32,8 @@
             android:imeOptions="actionSearch" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Match count label -->
     <TextView
-        android:id="@+id/tv_history_count"
+        android:id="@+id/tv_history_count_fragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="0 matches"
@@ -59,36 +41,35 @@
         android:textColor="@color/text_hint"
         android:layout_marginStart="@dimen/spacing_md"
         android:layout_marginTop="@dimen/spacing_sm"
-        app:layout_constraintTop_toBottomOf="@id/til_search_history"
+        app:layout_constraintTop_toBottomOf="@id/til_search_history_fragment"
         app:layout_constraintStart_toStartOf="parent"
         tools:text="14 matches" />
 
-    <!-- Matches RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_match_history"
+        android:id="@+id/rv_match_history_fragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:paddingStart="@dimen/spacing_md"
         android:paddingEnd="@dimen/spacing_md"
         android:paddingTop="@dimen/spacing_sm"
+        android:paddingBottom="80dp"
         android:clipToPadding="false"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@id/tv_history_count"
+        app:layout_constraintTop_toBottomOf="@id/tv_history_count_fragment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:listitem="@layout/item_match_history" />
 
-    <!-- Empty State -->
     <LinearLayout
-        android:id="@+id/layout_empty_history"
+        android:id="@+id/layout_empty_history_fragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
         android:padding="@dimen/spacing_xl"
         android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/tv_history_count"
+        app:layout_constraintTop_toBottomOf="@id/tv_history_count_fragment"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
@@ -96,12 +77,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="[Cricket]"
+            android:text="🏏"
             android:textSize="64sp"
             android:gravity="center" />
 
         <TextView
-            android:id="@+id/tv_empty_history_text"
+            android:id="@+id/tv_empty_history_text_fragment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/no_history"
@@ -111,7 +92,7 @@
             android:layout_marginTop="@dimen/spacing_sm" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_start_first_match"
+            android:id="@+id/btn_start_first_match_fragment"
             style="@style/Widget.CricketHub.Button.Primary"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/touch_target_min"

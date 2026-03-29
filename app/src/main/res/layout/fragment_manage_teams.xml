@@ -2,35 +2,23 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_primary">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/bg_primary"
-        app:elevation="0dp">
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar_manage_teams"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:title="Manage Teams"
-            app:titleTextColor="@color/text_primary"
-            app:navigationIcon="@android:drawable/ic_menu_revert" />
-    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_manage_teams"
+        android:id="@+id/rv_manage_teams_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         android:clipToPadding="false"
-        android:paddingBottom="80dp" />
+        android:paddingBottom="80dp"
+        tools:listitem="@layout/item_manage_team" />
 
     <TextView
-        android:id="@+id/tv_no_teams_manage"
+        android:id="@+id/tv_no_teams_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="No teams found. Click '+' to add one."
@@ -40,7 +28,7 @@
         android:textSize="@dimen/text_body_lg" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add_team"
+        android:id="@+id/fab_add_team_fragment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

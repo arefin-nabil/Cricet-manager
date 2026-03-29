@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinator_home"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_content"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:fillViewport="true"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_md">
+
+                <!-- QUICK STATS ROW 1 -->
+                <LinearLayout
+                    android:id="@+id/stats_row_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/spacing_sm">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_matches_played"
+                        style="@style/Widget.CricketHub.Card"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/spacing_xs">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="@dimen/spacing_sm">
+                            <TextView
+                                android:id="@+id/tv_matches_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textSize="@dimen/text_score_secondary"
+                                android:textColor="@color/green_primary"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/stat_matches_played"
+                                android:textSize="@dimen/text_caption"
+                                android:textColor="@color/text_secondary"
+                                android:gravity="center" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_total_teams"
+                        style="@style/Widget.CricketHub.Card"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/spacing_xs">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="@dimen/spacing_sm">
+                            <TextView
+                                android:id="@+id/tv_teams_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textSize="@dimen/text_score_secondary"
+                                android:textColor="@color/green_primary"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/stat_total_teams"
+                                android:textSize="@dimen/text_caption"
+                                android:textColor="@color/text_secondary"
+                                android:gravity="center" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- QUICK STATS ROW 2 -->
+                <LinearLayout
+                    android:id="@+id/stats_row_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/spacing_md">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_highest_score"
+                        style="@style/Widget.CricketHub.Card"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="@dimen/spacing_xs">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="@dimen/spacing_sm">
+                            <TextView
+                                android:id="@+id/tv_highest_score"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="-"
+                                android:textSize="@dimen/text_score_secondary"
+                                android:textColor="@color/green_primary"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/stat_highest_score"
+                                android:textSize="@dimen/text_caption"
+                                android:textColor="@color/text_secondary"
+                                android:gravity="center" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/card_total_players"
+                        style="@style/Widget.CricketHub.Card"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="@dimen/spacing_xs">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="@dimen/spacing_sm">
+                            <TextView
+                                android:id="@+id/tv_players_count"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="0"
+                                android:textSize="@dimen/text_score_secondary"
+                                android:textColor="@color/green_primary"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Total Players"
+                                android:textSize="@dimen/text_caption"
+                                android:textColor="@color/text_secondary"
+                                android:gravity="center" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+                </LinearLayout>
+
+                <!-- MY TEAMS SECTION -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/spacing_sm">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/section_my_teams"
+                        android:textSize="@dimen/text_subtitle"
+                        android:textColor="@color/text_primary"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tv_create_team_link_home"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="+ Create"
+                        android:textSize="@dimen/text_body"
+                        android:textColor="@color/green_primary"
+                        android:padding="@dimen/spacing_sm"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_teams_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_lg"
+                    android:orientation="horizontal"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_team_chip" />
+
+                <TextView
+                    android:id="@+id/tv_no_teams_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_teams"
+                    android:textColor="@color/text_hint"
+                    android:textSize="@dimen/text_body"
+                    android:gravity="center"
+                    android:padding="@dimen/spacing_md"
+                    android:visibility="gone"
+                    android:layout_marginBottom="@dimen/spacing_lg" />
+
+                <!-- RECENT MATCHES SECTION -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="@dimen/spacing_sm">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/section_recent_matches"
+                        android:textSize="@dimen/text_subtitle"
+                        android:textColor="@color/text_primary"
+                        android:textStyle="bold" />
+                    <TextView
+                        android:id="@+id/tv_view_all_home"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="View All"
+                        android:textSize="@dimen/text_body"
+                        android:textColor="@color/green_primary"
+                        android:padding="@dimen/spacing_sm"
+                        android:clickable="true"
+                        android:focusable="true" />
+                </LinearLayout>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rv_recent_matches_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    tools:listitem="@layout/item_recent_match" />
+
+                <TextView
+                    android:id="@+id/tv_no_matches_home"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/no_matches"
+                    android:textColor="@color/text_hint"
+                    android:textSize="@dimen/text_body"
+                    android:gravity="center"
+                    android:padding="@dimen/spacing_lg"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+
+        <!-- Start Match FAB -->
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            android:id="@+id/fab_start_match_home"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/touch_target_min"
+            android:layout_margin="@dimen/spacing_md"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:backgroundTint="@color/green_primary"
+            android:text="@string/fab_start_match"
+            android:textColor="@color/text_on_green"
+            android:textSize="@dimen/text_body_lg"
+            android:textStyle="bold"
+            app:icon="@android:drawable/ic_input_add"
+            app:iconTint="@color/text_on_green"
+            app:elevation="@dimen/elevation_fab" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

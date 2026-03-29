@@ -77,7 +77,7 @@
                     android:layout_width="72dp"
                     android:layout_height="72dp"
                     android:background="@drawable/bg_team_logo"
-                    android:src="@android:drawable/ic_menu_camera"
+                    android:src="@drawable/team2"
                     android:padding="16dp"
                     android:scaleType="centerInside"
                     android:layout_marginEnd="@dimen/spacing_md"

@@ -5,21 +5,19 @@
     <!-- Tab 1: Home / Dashboard -->
     <item
         android:id="@+id/nav_home"
-        android:icon="@android:drawable/ic_menu_compass"
+        android:icon="@drawable/home"
         android:title="@string/nav_home" />
 
     <!-- Tab 2: Teams -->
     <item
         android:id="@+id/nav_teams"
-        android:icon="@android:drawable/ic_menu_manage"
+        android:icon="@drawable/team2"
         android:title="@string/nav_teams" />
 
-
-
-    <!-- Tab 4: Match History -->
+    <!-- Tab 3: Match History -->
     <item
         android:id="@+id/nav_history"
-        android:icon="@android:drawable/ic_menu_recent_history"
+        android:icon="@drawable/history"
         android:title="@string/nav_history" />
 
 </menu>
