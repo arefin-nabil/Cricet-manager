@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_primary">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Header -->
+        <TextView
+            android:id="@+id/tv_tournaments_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tournaments"
+            android:textSize="@dimen/text_title"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:padding="@dimen/spacing_md"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- Empty State -->
+        <LinearLayout
+            android:id="@+id/layout_empty_tournaments"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/tv_tournaments_header"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <com.airbnb.lottie.LottieAnimationView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                app:lottie_rawRes="@raw/win"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="No Tournaments Yet"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_subtitle"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/spacing_md" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tap + to host a new tournament"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_body"
+                android:layout_marginTop="@dimen/spacing_sm" />
+        </LinearLayout>
+
+        <!-- RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_tournaments"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingHorizontal="@dimen/spacing_md"
+            android:clipToPadding="false"
+            app:layout_constraintTop_toBottomOf="@id/tv_tournaments_header"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:listitem="@layout/item_tournament" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_create_tournament"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/touch_target_min"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/spacing_md"
+        app:icon="@android:drawable/ic_input_add"
+        app:iconTint="@color/text_on_green"
+        android:text="Host Tournament"
+        android:textColor="@color/text_on_green"
+        android:textSize="@dimen/text_body_lg"
+        android:textStyle="bold"
+        app:elevation="@dimen/elevation_fab"
+        android:backgroundTint="@color/green_primary" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

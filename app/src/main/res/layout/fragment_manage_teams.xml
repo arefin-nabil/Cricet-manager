@@ -27,14 +27,19 @@
         android:textColor="@color/text_secondary"
         android:textSize="@dimen/text_body_lg" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab_add_team_fragment"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/touch_target_min"
         android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/spacing_lg"
-        app:srcCompat="@android:drawable/ic_input_add"
-        app:tint="@color/text_on_green"
-        app:backgroundTint="@color/green_primary" />
+        android:layout_margin="@dimen/spacing_md"
+        app:icon="@android:drawable/ic_input_add"
+        app:iconTint="@color/text_on_green"
+        android:text="Add Team"
+        android:textColor="@color/text_on_green"
+        android:textSize="@dimen/text_body_lg"
+        android:textStyle="bold"
+        app:elevation="@dimen/elevation_fab"
+        android:backgroundTint="@color/green_primary" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

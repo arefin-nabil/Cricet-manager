@@ -58,6 +58,7 @@ public class CreateMatchActivity extends AppCompatActivity {
     private MaterialButton    btnStartMatch;
 
     private long              tossWinnerId = -1; // New field to store toss result
+    private long              preloadedMatchId = -1; // Added for tournament match linkage
 
     // ============================================================
     // Data
@@ -88,6 +89,8 @@ public class CreateMatchActivity extends AppCompatActivity {
 
         db    = CricketDbHelper.getInstance(this);
         teams = db.getAllTeams();
+        
+        preloadedMatchId = getIntent().getLongExtra("match_id", -1);
 
         bindViews();
         setupToolbar();
@@ -95,6 +98,10 @@ public class CreateMatchActivity extends AppCompatActivity {
         setupOversChips();
         setupToss();
         setupStartButton();
+        
+        if (preloadedMatchId != -1) {
+             loadPreconfiguredMatchData();
+        }
     }
 
     // ============================================================
@@ -139,6 +146,37 @@ public class CreateMatchActivity extends AppCompatActivity {
     // ============================================================
     // Team Selectors
     // ============================================================
+
+    private void loadPreconfiguredMatchData() {
+        Match m = db.getMatchById(preloadedMatchId);
+        if (m == null) return;
+        
+        selectedTeamA = db.getTeamById(m.getTeamAId());
+        selectedTeamB = db.getTeamById(m.getTeamBId());
+        
+        if (selectedTeamA != null) {
+             tvTeamASelected.setText(selectedTeamA.getName());
+             tvTeamASelected.setTextColor(getColor(R.color.text_primary));
+        }
+        if (selectedTeamB != null) {
+             tvTeamBSelected.setText(selectedTeamB.getName());
+             tvTeamBSelected.setTextColor(getColor(R.color.text_primary));
+        }
+        
+        updateOvers(m.getTotalOvers());
+        updateManualTossButtons();
+        
+        // Lock selections so Tournament structure remains intact
+        cardTeamA.setClickable(false);
+        cardTeamB.setClickable(false);
+        etOversCount.setEnabled(false);
+        chip5.setEnabled(false);
+        chip10.setEnabled(false);
+        chip15.setEnabled(false);
+        chip20.setEnabled(false);
+        findViewById(R.id.btn_overs_minus).setEnabled(false);
+        findViewById(R.id.btn_overs_plus).setEnabled(false);
+    }
 
     private void setupTeamSelectors() {
         if (teams.isEmpty()) {
@@ -343,13 +381,19 @@ public class CreateMatchActivity extends AppCompatActivity {
             return;
         }
 
-        // Create Match object
-        Match match = new Match();
-        match.setTeamAId(selectedTeamA.getId());
-        match.setTeamBId(selectedTeamB.getId());
-        match.setTeamAName(selectedTeamA.getName());
-        match.setTeamBName(selectedTeamB.getName());
-        match.setTotalOvers(selectedOvers);
+        Match match;
+        if (preloadedMatchId != -1) {
+            match = db.getMatchById(preloadedMatchId);
+            if (match == null) return;
+        } else {
+            match = new Match();
+            match.setTeamAId(selectedTeamA.getId());
+            match.setTeamBId(selectedTeamB.getId());
+            match.setTeamAName(selectedTeamA.getName());
+            match.setTeamBName(selectedTeamB.getName());
+            match.setTotalOvers(selectedOvers);
+        }
+        
         match.setTossWinnerId(tossWinnerId);
         match.setTossElection(tossElection);
         match.setStatus(Match.STATUS_LIVE);
@@ -373,7 +417,14 @@ public class CreateMatchActivity extends AppCompatActivity {
             }
         }
 
-        long matchId = db.insertMatch(match);
+        long matchId;
+        if (preloadedMatchId != -1) {
+            db.updateMatch(match);
+            matchId = preloadedMatchId;
+        } else {
+            matchId = db.insertMatch(match);
+        }
+        
         if (matchId != -1) {
             Intent intent = new Intent(this, LiveScoringActivity.class);
             intent.putExtra("match_id", matchId);

@@ -45,6 +45,10 @@ public class Match {
     private String result; // e.g., "Team A won by 14 runs"
     private long winnerId;
 
+    // Tournament Linkage
+    private long tournamentId = -1;
+    private int tournamentMatchNumber = 0;
+
     private long createdAt; // Unix timestamp
     private String dateFormatted; // For display
 
@@ -183,6 +187,12 @@ public class Match {
 
     public long getWinnerId() { return winnerId; }
     public void setWinnerId(long winnerId) { this.winnerId = winnerId; }
+
+    public long getTournamentId() { return tournamentId; }
+    public void setTournamentId(long tournamentId) { this.tournamentId = tournamentId; }
+
+    public int getTournamentMatchNumber() { return tournamentMatchNumber; }
+    public void setTournamentMatchNumber(int tournamentMatchNumber) { this.tournamentMatchNumber = tournamentMatchNumber; }
 
     public long getCreatedAt() { return createdAt; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }

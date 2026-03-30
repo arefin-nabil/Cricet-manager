@@ -20,16 +20,16 @@
         android:gravity="center"
         android:padding="@dimen/spacing_sm">
 
-        <!-- Team logo circle -->
-        <ImageView
+        <!-- Team logo circle lottie -->
+        <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/iv_team_logo_chip"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:background="@drawable/bg_team_logo"
-            android:src="@drawable/team2"
-            app:tint="@color/text_primary"
-            android:padding="8dp"
-            android:contentDescription="Team logo" />
+            app:lottie_rawRes="@raw/toss"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            android:padding="8dp" />
 
         <!-- Team name -->
         <TextView

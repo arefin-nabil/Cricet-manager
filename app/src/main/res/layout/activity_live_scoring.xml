@@ -35,34 +35,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         tools:subtitle="1st Innings - Warriors vs Lions">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_live_indicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="CricketHub"
-                android:textSize="@dimen/text_subtitle"
-                android:textColor="@color/green_primary"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tv_live_indicator"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="LIVE"
-                android:background="@drawable/bg_pill_wicket"
-                android:paddingHorizontal="6dp"
-                android:paddingVertical="2dp"
-                android:layout_marginStart="8dp"
-                android:textSize="10sp"
-                android:textColor="@color/text_primary"
-                android:textStyle="bold"
-                android:letterSpacing="0.05" />
-        </LinearLayout>
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:text="LIVE"
+            android:background="@drawable/bg_pill_wicket"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp"
+            android:textSize="10sp"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold"
+            android:letterSpacing="0.05" />
     </com.google.android.material.appbar.MaterialToolbar>
 
     <!--  -->
@@ -864,5 +850,26 @@
         </LinearLayout>
 
     </LinearLayout>
+
+    <!--
+        LOTTIE ANIMATION OVERLAY
+        Full-screen celebration animation for SIX, FOUR, and WICKET events.
+        Shown for ~1.5s (speed 2.0x on a 3s source animation).
+        Sits on top of all other views. Pointer events pass through when GONE.
+    -->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_event_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        android:importantForAccessibility="no"
+        android:clickable="false"
+        android:focusable="false"
+        app:lottie_speed="2.0"
+        app:lottie_loop="false"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

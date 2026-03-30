@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment;
 import com.test.crickethub.fragment.HomeFragment;
 import com.test.crickethub.fragment.ManageTeamsFragment;
 import com.test.crickethub.fragment.MatchHistoryFragment;
+import com.test.crickethub.fragment.TournamentsFragment;
 
 /**
  * MainActivity.java — CricketHub Dashboard
@@ -106,8 +107,11 @@ public class MainActivity extends AppCompatActivity implements HomeFragment.OnHo
             } else if (itemId == R.id.nav_history) {
                 fragment = new MatchHistoryFragment();
                 toolbar.setTitle(R.string.history_title);
+            } else if (itemId == R.id.nav_tournaments) {
+                fragment = new TournamentsFragment();
+                toolbar.setTitle("Tournaments");
             }
-            
+
             if (fragment != null) {
                 loadFragment(fragment);
                 return true;

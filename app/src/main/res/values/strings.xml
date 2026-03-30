@@ -6,7 +6,6 @@
     <!-- Navigation Labels -->
     <string name="nav_home">Home</string>
     <string name="nav_teams">Teams</string>
-    <string name="nav_match">Match</string>
     <string name="nav_history">History</string>
 
     <!-- Dashboard -->

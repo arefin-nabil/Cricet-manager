@@ -14,7 +14,13 @@
         android:icon="@drawable/team2"
         android:title="@string/nav_teams" />
 
-    <!-- Tab 3: Match History -->
+    <!-- Tab 3: Tournaments -->
+    <item
+        android:id="@+id/nav_tournaments"
+        android:icon="@drawable/tm"
+        android:title="Tournaments" />
+
+    <!-- Tab 4: Match History -->
     <item
         android:id="@+id/nav_history"
         android:icon="@drawable/history"

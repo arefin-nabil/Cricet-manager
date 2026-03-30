@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.test.crickethub.R;
 import com.test.crickethub.activity.CreateTeamActivity;
 import com.test.crickethub.adapter.ManageTeamAdapter;
@@ -28,7 +28,7 @@ public class ManageTeamsFragment extends Fragment {
 
     private RecyclerView rvManageTeams;
     private TextView tvNoTeams;
-    private FloatingActionButton fabAddTeam;
+    private ExtendedFloatingActionButton fabAddTeam;
     
     private CricketDbHelper db;
     private ManageTeamAdapter adapter;
@@ -90,6 +90,10 @@ public class ManageTeamsFragment extends Fragment {
 
     private void loadTeams() {
         List<Team> teams = db.getAllTeams();
+        // Populate player counts for the member chip
+        for (Team t : teams) {
+            t.setPlayerCount(db.getPlayersForTeam(t.getId()).size());
+        }
         if (teams.isEmpty()) {
             tvNoTeams.setVisibility(View.VISIBLE);
             rvManageTeams.setVisibility(View.GONE);

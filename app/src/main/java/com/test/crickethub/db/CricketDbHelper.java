@@ -35,7 +35,7 @@ public class CricketDbHelper extends SQLiteOpenHelper {
 
     // Database Metadata
     private static final String DB_NAME    = "crickethub.db";
-    private static final int    DB_VERSION = 2;
+    private static final int    DB_VERSION = 3;
 
     // ============================================================
     // Table: teams
@@ -102,6 +102,8 @@ public class CricketDbHelper extends SQLiteOpenHelper {
     private static final String COL_MTH_STATUS       = "status";
     private static final String COL_MTH_RESULT       = "result";
     private static final String COL_MTH_WINNER_ID    = "winner_id";
+    private static final String COL_MTH_TOURNAMENT_ID = "tournament_id"; // V3
+    private static final String COL_MTH_TOURNAMENT_M_NO = "tournament_match_number"; // V3
     private static final String COL_MTH_CREATED_AT   = "created_at";
 
     private static final String CREATE_TABLE_MATCHES =
@@ -128,7 +130,72 @@ public class CricketDbHelper extends SQLiteOpenHelper {
             COL_MTH_STATUS      + " TEXT DEFAULT 'setup', " +
             COL_MTH_RESULT      + " TEXT, " +
             COL_MTH_WINNER_ID   + " INTEGER DEFAULT 0, " +
+            COL_MTH_TOURNAMENT_ID + " INTEGER DEFAULT -1, " +
+            COL_MTH_TOURNAMENT_M_NO + " INTEGER DEFAULT 0, " +
             COL_MTH_CREATED_AT  + " INTEGER" +
+            ")";
+
+    // ============================================================
+    // Table: tournaments
+    // ============================================================
+    private static final String TABLE_TOURNAMENTS      = "tournaments";
+    private static final String COL_TRN_ID             = "_id";
+    private static final String COL_TRN_NAME           = "name";
+    private static final String COL_TRN_FORMAT         = "format";
+    private static final String COL_TRN_START_DATE     = "start_date";
+    private static final String COL_TRN_END_DATE       = "end_date";
+    private static final String COL_TRN_TOTAL_TEAMS    = "total_teams";
+    private static final String COL_TRN_OVERS_LIMIT    = "overs_limit";
+
+    private static final String CREATE_TABLE_TOURNAMENTS =
+            "CREATE TABLE " + TABLE_TOURNAMENTS + " (" +
+            COL_TRN_ID          + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+            COL_TRN_NAME        + " TEXT NOT NULL, " +
+            COL_TRN_FORMAT      + " TEXT, " +
+            COL_TRN_START_DATE  + " TEXT, " +
+            COL_TRN_END_DATE    + " TEXT, " +
+            COL_TRN_TOTAL_TEAMS + " INTEGER, " +
+            COL_TRN_OVERS_LIMIT + " INTEGER" +
+            ")";
+
+    // ============================================================
+    // Table: tournament_teams
+    // ============================================================
+    private static final String TABLE_TRN_TEAMS      = "tournament_teams";
+    private static final String COL_TT_TRN_ID        = "tournament_id";
+    private static final String COL_TT_TEAM_ID       = "team_id";
+
+    private static final String CREATE_TABLE_TRN_TEAMS =
+            "CREATE TABLE " + TABLE_TRN_TEAMS + " (" +
+            COL_TT_TRN_ID      + " INTEGER NOT NULL, " +
+            COL_TT_TEAM_ID     + " INTEGER NOT NULL, " +
+            "PRIMARY KEY (" + COL_TT_TRN_ID + ", " + COL_TT_TEAM_ID + ")" +
+            ")";
+
+    // ============================================================
+    // Table: tournament_points
+    // ============================================================
+    private static final String TABLE_TRN_POINTS      = "tournament_points";
+    private static final String COL_TP_TRN_ID         = "tournament_id";
+    private static final String COL_TP_TEAM_ID        = "team_id";
+    private static final String COL_TP_MATCHES_PLAYED = "matches_played";
+    private static final String COL_TP_WON            = "won";
+    private static final String COL_TP_LOST           = "lost";
+    private static final String COL_TP_TIED           = "tied";
+    private static final String COL_TP_POINTS         = "points";
+    private static final String COL_TP_NET_RUN_RATE   = "net_run_rate";
+
+    private static final String CREATE_TABLE_TRN_POINTS =
+            "CREATE TABLE " + TABLE_TRN_POINTS + " (" +
+            COL_TP_TRN_ID         + " INTEGER NOT NULL, " +
+            COL_TP_TEAM_ID        + " INTEGER NOT NULL, " +
+            COL_TP_MATCHES_PLAYED + " INTEGER DEFAULT 0, " +
+            COL_TP_WON            + " INTEGER DEFAULT 0, " +
+            COL_TP_LOST           + " INTEGER DEFAULT 0, " +
+            COL_TP_TIED           + " INTEGER DEFAULT 0, " +
+            COL_TP_POINTS         + " INTEGER DEFAULT 0, " +
+            COL_TP_NET_RUN_RATE   + " REAL DEFAULT 0.0, " +
+            "PRIMARY KEY (" + COL_TP_TRN_ID + ", " + COL_TP_TEAM_ID + ")" +
             ")";
 
     // ============================================================
@@ -196,6 +263,9 @@ public class CricketDbHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_PLAYERS);
         db.execSQL(CREATE_TABLE_MATCHES);
         db.execSQL(CREATE_TABLE_BALLS);
+        db.execSQL(CREATE_TABLE_TOURNAMENTS);
+        db.execSQL(CREATE_TABLE_TRN_TEAMS);
+        db.execSQL(CREATE_TABLE_TRN_POINTS);
         Log.d(TAG, "Database created: " + DB_NAME);
     }
 
@@ -204,6 +274,14 @@ public class CricketDbHelper extends SQLiteOpenHelper {
         if (oldVersion < 2) {
             // Version 2 migration -> safely inject description column into existing team table
             db.execSQL("ALTER TABLE " + TABLE_TEAMS + " ADD COLUMN " + COL_TEAM_DESC + " TEXT");
+        }
+        if (oldVersion < 3) {
+            // Version 3 migration -> Tournaments support
+            db.execSQL("ALTER TABLE " + TABLE_MATCHES + " ADD COLUMN " + COL_MTH_TOURNAMENT_ID + " INTEGER DEFAULT -1");
+            db.execSQL("ALTER TABLE " + TABLE_MATCHES + " ADD COLUMN " + COL_MTH_TOURNAMENT_M_NO + " INTEGER DEFAULT 0");
+            db.execSQL(CREATE_TABLE_TOURNAMENTS);
+            db.execSQL(CREATE_TABLE_TRN_TEAMS);
+            db.execSQL(CREATE_TABLE_TRN_POINTS);
         }
     }
 
@@ -417,6 +495,8 @@ public class CricketDbHelper extends SQLiteOpenHelper {
         cv.put(COL_MTH_STATUS,      match.getStatus());
         cv.put(COL_MTH_RESULT,      match.getResult());
         cv.put(COL_MTH_WINNER_ID,   match.getWinnerId());
+        cv.put(COL_MTH_TOURNAMENT_ID, match.getTournamentId());
+        cv.put(COL_MTH_TOURNAMENT_M_NO, match.getTournamentMatchNumber());
         return cv;
     }
 
@@ -517,6 +597,13 @@ public class CricketDbHelper extends SQLiteOpenHelper {
         m.setStatus(c.getString(c.getColumnIndexOrThrow(COL_MTH_STATUS)));
         m.setResult(c.getString(c.getColumnIndexOrThrow(COL_MTH_RESULT)));
         m.setWinnerId(c.getLong(c.getColumnIndexOrThrow(COL_MTH_WINNER_ID)));
+        
+        int tidIdx = c.getColumnIndex(COL_MTH_TOURNAMENT_ID);
+        if (tidIdx != -1) m.setTournamentId(c.getLong(tidIdx));
+        
+        int tmnIdx = c.getColumnIndex(COL_MTH_TOURNAMENT_M_NO);
+        if (tmnIdx != -1) m.setTournamentMatchNumber(c.getInt(tmnIdx));
+
         long createdAt = c.getLong(c.getColumnIndexOrThrow(COL_MTH_CREATED_AT));
         m.setCreatedAt(createdAt);
         m.setDateFormatted(new SimpleDateFormat("dd MMM yyyy, h:mm a", Locale.getDefault())
@@ -615,5 +702,162 @@ public class CricketDbHelper extends SQLiteOpenHelper {
             c.close();
         }
         return balls;
+    }
+
+    // ============================================================
+    // TOURNAMENT OPERATIONS (V3)
+    // ============================================================
+
+    public long insertTournament(com.test.crickethub.model.Tournament trn) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_TRN_NAME, trn.getName());
+        cv.put(COL_TRN_FORMAT, trn.getFormat());
+        cv.put(COL_TRN_START_DATE, trn.getStartDate());
+        cv.put(COL_TRN_END_DATE, trn.getEndDate());
+        cv.put(COL_TRN_TOTAL_TEAMS, trn.getTotalTeams());
+        cv.put(COL_TRN_OVERS_LIMIT, trn.getOversLimit());
+        long id = db.insert(TABLE_TOURNAMENTS, null, cv);
+        trn.setId(id);
+        return id;
+    }
+
+    public List<com.test.crickethub.model.Tournament> getAllTournaments() {
+        List<com.test.crickethub.model.Tournament> list = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(TABLE_TOURNAMENTS, null, null, null, null, null, COL_TRN_ID + " DESC");
+        if (c != null) {
+            while (c.moveToNext()) {
+                com.test.crickethub.model.Tournament t = new com.test.crickethub.model.Tournament();
+                t.setId(c.getLong(c.getColumnIndexOrThrow(COL_TRN_ID)));
+                t.setName(c.getString(c.getColumnIndexOrThrow(COL_TRN_NAME)));
+                t.setFormat(c.getString(c.getColumnIndexOrThrow(COL_TRN_FORMAT)));
+                t.setStartDate(c.getString(c.getColumnIndexOrThrow(COL_TRN_START_DATE)));
+                t.setEndDate(c.getString(c.getColumnIndexOrThrow(COL_TRN_END_DATE)));
+                t.setTotalTeams(c.getInt(c.getColumnIndexOrThrow(COL_TRN_TOTAL_TEAMS)));
+                t.setOversLimit(c.getInt(c.getColumnIndexOrThrow(COL_TRN_OVERS_LIMIT)));
+                list.add(t);
+            }
+            c.close();
+        }
+        return list;
+    }
+
+    public com.test.crickethub.model.Tournament getTournamentById(long id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(TABLE_TOURNAMENTS, null, COL_TRN_ID + "=?", new String[]{String.valueOf(id)}, null, null, null);
+        com.test.crickethub.model.Tournament t = null;
+        if (c != null) {
+            if (c.moveToFirst()) {
+                t = new com.test.crickethub.model.Tournament();
+                t.setId(c.getLong(c.getColumnIndexOrThrow(COL_TRN_ID)));
+                t.setName(c.getString(c.getColumnIndexOrThrow(COL_TRN_NAME)));
+                t.setFormat(c.getString(c.getColumnIndexOrThrow(COL_TRN_FORMAT)));
+                t.setStartDate(c.getString(c.getColumnIndexOrThrow(COL_TRN_START_DATE)));
+                t.setEndDate(c.getString(c.getColumnIndexOrThrow(COL_TRN_END_DATE)));
+                t.setTotalTeams(c.getInt(c.getColumnIndexOrThrow(COL_TRN_TOTAL_TEAMS)));
+                t.setOversLimit(c.getInt(c.getColumnIndexOrThrow(COL_TRN_OVERS_LIMIT)));
+            }
+            c.close();
+        }
+        return t;
+    }
+
+    public void addTeamToTournament(long trnId, long teamId) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(COL_TT_TRN_ID, trnId);
+        cv.put(COL_TT_TEAM_ID, teamId);
+        db.insertWithOnConflict(TABLE_TRN_TEAMS, null, cv, SQLiteDatabase.CONFLICT_IGNORE);
+        
+        // Also init points table tracking
+        ContentValues cvp = new ContentValues();
+        cvp.put(COL_TP_TRN_ID, trnId);
+        cvp.put(COL_TP_TEAM_ID, teamId);
+        db.insertWithOnConflict(TABLE_TRN_POINTS, null, cvp, SQLiteDatabase.CONFLICT_IGNORE);
+    }
+    
+    public List<Team> getTeamsForTournament(long trnId) {
+        List<Team> teams = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "SELECT t.* FROM " + TABLE_TEAMS + " t INNER JOIN " + TABLE_TRN_TEAMS + " tt ON t." + COL_TEAM_ID + " = tt." + COL_TT_TEAM_ID + " WHERE tt." + COL_TT_TRN_ID + "=?";
+        Cursor c = db.rawQuery(query, new String[]{String.valueOf(trnId)});
+        if (c != null) {
+            while (c.moveToNext()) {
+                Team t = new Team();
+                t.setId(c.getLong(c.getColumnIndexOrThrow(COL_TEAM_ID)));
+                t.setName(c.getString(c.getColumnIndexOrThrow(COL_TEAM_NAME)));
+                t.setLogoPath(c.getString(c.getColumnIndexOrThrow(COL_TEAM_LOGO)));
+                int descIdx = c.getColumnIndex(COL_TEAM_DESC);
+                if (descIdx != -1) t.setDescription(c.getString(descIdx));
+                teams.add(t);
+            }
+            c.close();
+        }
+        return teams;
+    }
+
+    public List<Match> getMatchesForTournament(long trnId) {
+        List<Match> matches = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(TABLE_MATCHES, null, COL_MTH_TOURNAMENT_ID + "=?", new String[]{String.valueOf(trnId)}, null, null, COL_MTH_TOURNAMENT_M_NO + " ASC");
+        if (c != null) {
+            while (c.moveToNext()) {
+                matches.add(cursorToMatch(c));
+            }
+            c.close();
+        }
+        return matches;
+    }
+
+    public List<com.test.crickethub.model.PointsTableRow> getPointsTable(long trnId) {
+        List<com.test.crickethub.model.PointsTableRow> list = new ArrayList<>();
+        SQLiteDatabase db = getReadableDatabase();
+        String query = "SELECT tp.*, t." + COL_TEAM_NAME + " FROM " + TABLE_TRN_POINTS + " tp " +
+                       "INNER JOIN " + TABLE_TEAMS + " t ON tp." + COL_TP_TEAM_ID + " = t." + COL_TEAM_ID + " " +
+                       "WHERE tp." + COL_TP_TRN_ID + "=? ORDER BY tp." + COL_TP_POINTS + " DESC, tp." + COL_TP_NET_RUN_RATE + " DESC";
+        Cursor c = db.rawQuery(query, new String[]{String.valueOf(trnId)});
+        if (c != null) {
+            while (c.moveToNext()) {
+                com.test.crickethub.model.PointsTableRow r = new com.test.crickethub.model.PointsTableRow();
+                r.setTeamId(c.getLong(c.getColumnIndexOrThrow(COL_TP_TEAM_ID)));
+                r.setTeamName(c.getString(c.getColumnIndexOrThrow(COL_TEAM_NAME)));
+                r.setMatchesPlayed(c.getInt(c.getColumnIndexOrThrow(COL_TP_MATCHES_PLAYED)));
+                r.setWon(c.getInt(c.getColumnIndexOrThrow(COL_TP_WON)));
+                r.setLost(c.getInt(c.getColumnIndexOrThrow(COL_TP_LOST)));
+                r.setTied(c.getInt(c.getColumnIndexOrThrow(COL_TP_TIED)));
+                r.setPoints(c.getInt(c.getColumnIndexOrThrow(COL_TP_POINTS)));
+                r.setNetRunRate(c.getDouble(c.getColumnIndexOrThrow(COL_TP_NET_RUN_RATE)));
+                list.add(r);
+            }
+            c.close();
+        }
+        return list;
+    }
+
+    public void updatePointsTableRow(long trnId, long teamId, boolean won, boolean tied, double nrrDelta) {
+        SQLiteDatabase db = getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_TRN_POINTS + " WHERE " + COL_TP_TRN_ID + "=? AND " + COL_TP_TEAM_ID + "=?";
+        Cursor c = db.rawQuery(query, new String[]{String.valueOf(trnId), String.valueOf(teamId)});
+        if (c != null && c.moveToFirst()) {
+            int played = c.getInt(c.getColumnIndexOrThrow(COL_TP_MATCHES_PLAYED)) + 1;
+            int wins = c.getInt(c.getColumnIndexOrThrow(COL_TP_WON)) + (won && !tied ? 1 : 0);
+            int losses = c.getInt(c.getColumnIndexOrThrow(COL_TP_LOST)) + (!won && !tied ? 1 : 0);
+            int ties = c.getInt(c.getColumnIndexOrThrow(COL_TP_TIED)) + (tied ? 1 : 0);
+            int points = c.getInt(c.getColumnIndexOrThrow(COL_TP_POINTS)) + (won && !tied ? 2 : (tied ? 1 : 0));
+            double newNrr = c.getDouble(c.getColumnIndexOrThrow(COL_TP_NET_RUN_RATE)) + nrrDelta;
+
+            ContentValues cv = new ContentValues();
+            cv.put(COL_TP_MATCHES_PLAYED, played);
+            cv.put(COL_TP_WON, wins);
+            cv.put(COL_TP_LOST, losses);
+            cv.put(COL_TP_TIED, ties);
+            cv.put(COL_TP_POINTS, points);
+            cv.put(COL_TP_NET_RUN_RATE, newNrr);
+
+            db.update(TABLE_TRN_POINTS, cv, COL_TP_TRN_ID + "=? AND " + COL_TP_TEAM_ID + "=?",
+                      new String[]{String.valueOf(trnId), String.valueOf(teamId)});
+            c.close();
+        }
     }
 }

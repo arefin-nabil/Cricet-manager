@@ -38,6 +38,11 @@ public class Team {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
+    // Player count — set when loading teams from DB
+    private int playerCount;
+    public int getPlayerCount() { return playerCount; }
+    public void setPlayerCount(int playerCount) { this.playerCount = playerCount; }
+
     @Override
     public String toString() {
         return name; // Used by Spinner adapters

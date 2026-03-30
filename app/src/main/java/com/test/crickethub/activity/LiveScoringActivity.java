@@ -3,6 +3,8 @@ package com.test.crickethub.activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -23,6 +25,8 @@ import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.airbnb.lottie.LottieAnimationView;
+import com.airbnb.lottie.RenderMode;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.ChipGroup;
@@ -83,6 +87,10 @@ public class LiveScoringActivity extends AppCompatActivity {
     private TextView btnRun0, btnRun1, btnRun2, btnRun3, btnRun4, btnRun6;
     private MaterialButton btnWide, btnNoBall, btnBye, btnLegBye;
     private MaterialButton btnWicket, btnUndo, btnNextOver;
+
+    // Lottie celebration overlay
+    private LottieAnimationView lottieEventOverlay;
+    private final Handler lottieHandler = new Handler(Looper.getMainLooper());
 
     // ============================================================
     // Data
@@ -235,6 +243,8 @@ public class LiveScoringActivity extends AppCompatActivity {
         btnUndo = findViewById(R.id.btn_undo);
         btnNextOver = findViewById(R.id.btn_next_over);
 
+        // Lottie celebration overlay
+        lottieEventOverlay = findViewById(R.id.lottie_event_overlay);
 
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -243,6 +253,36 @@ public class LiveScoringActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    // ============================================================
+    // LOTTIE CELEBRATION ANIMATION
+    // ============================================================
+
+    /**
+     * Shows a celebration Lottie animation at 2x speed (≈1.5s from 3s sources).
+     * Automatically hides after the animation finishes.
+     * @param rawResId e.g. R.raw.anim_six, R.raw.anim_four, R.raw.anim_out
+     */
+    private void showLottieAnimation(int rawResId) {
+        if (lottieEventOverlay == null) return;
+        // Cancel any pending hide
+        lottieHandler.removeCallbacksAndMessages(null);
+
+        lottieEventOverlay.cancelAnimation();
+        lottieEventOverlay.setAnimation(rawResId);
+        lottieEventOverlay.setRenderMode(RenderMode.HARDWARE);
+        lottieEventOverlay.setSpeed(2.0f);
+        lottieEventOverlay.setVisibility(View.VISIBLE);
+        lottieEventOverlay.playAnimation();
+
+        // Hide after ~1.5 s (3s animation * 0.5 = 1.5s)
+        lottieHandler.postDelayed(() -> {
+            if (lottieEventOverlay != null) {
+                lottieEventOverlay.cancelAnimation();
+                lottieEventOverlay.setVisibility(View.GONE);
+            }
+        }, 1500);
     }
 
     // ============================================================
@@ -511,10 +551,14 @@ public class LiveScoringActivity extends AppCompatActivity {
         // Update batsman
         striker.addRuns(runs);
         striker.addBall();
-        if (runs == 4)
+        if (runs == 4) {
             striker.incrementFours();
-        if (runs == 6)
+            showLottieAnimation(R.raw.anim_four);
+        }
+        if (runs == 6) {
             striker.incrementSixes();
+            showLottieAnimation(R.raw.anim_six);
+        }
 
         // Update bowler
         currentBowler.addBallBowled();
@@ -735,15 +779,21 @@ public class LiveScoringActivity extends AppCompatActivity {
         db.updateMatch(match);
         refreshScoreboardUI();
 
+        // Show OUT animation for 1.5 seconds
+        showLottieAnimation(R.raw.anim_out);
+
         if (!checkInningsCompletion()) {
             String wicketTitle = "Wicket! (" + dismissalType + ")";
             String wicketSummary = (dismissed != null ? dismissed.getName() : "Batsman") + " is out.\nScore: " + match.getCurrentScore() + "/" + match.getCurrentWickets();
-            
+
             isWaitingForNextBatsman = true;
             waitingForDismissedPlayer = dismissed;
-            showTransitionPauseDialog(wicketTitle, wicketSummary, () -> {
-                showNextBatsmanDialog(dismissed);
-            });
+            // Delay the dialog by 1.5s so the animation can play first
+            lottieHandler.postDelayed(() -> {
+                showTransitionPauseDialog(wicketTitle, wicketSummary, () -> {
+                    showNextBatsmanDialog(dismissed);
+                });
+            }, 1500);
         }
     }
 
@@ -979,22 +1029,55 @@ public class LiveScoringActivity extends AppCompatActivity {
 
         match.setResult(result);
         db.updateMatch(match);
+        
+        // Tournament Integration: Update Points Table & NRR
+        if (match.getTournamentId() != -1) {
+            boolean teamAWon = (match.getWinnerId() == match.getTeamAId());
+            boolean teamBWon = (match.getWinnerId() == match.getTeamBId());
+            boolean tied = "Match Tied!".equals(result);
 
-        // Show result dialog
-        new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
-                .setTitle("Match Complete!")
-                .setMessage(result)
-                .setPositiveButton("View Scorecard", (d, w) -> {
-                    Intent intent = new Intent(this, ScorecardActivity.class);
-                    intent.putExtra("match_id", matchId);
-                    startActivity(intent);
-                    finish();
-                })
-                .setNegativeButton("Go Home", (d, w) -> {
-                    finish(); // Back to MainActivity
-                })
-                .setCancelable(false)
-                .show();
+            double teamAOvers = match.getInnings1Overs() + (match.getInnings1Balls() / 6.0);
+            double teamBOvers = match.getInnings2Overs() + (match.getInnings2Balls() / 6.0);
+            
+            // Avoid division by zero
+            teamAOvers = Math.max(0.166, teamAOvers);
+            teamBOvers = Math.max(0.166, teamBOvers);
+
+            double teamANrr = (match.getInnings1Score() / teamAOvers) - (match.getInnings2Score() / teamBOvers);
+            double teamBNrr = -teamANrr;
+            
+            // If Team B actually batted first, flip it
+            if (match.getBattingTeamId() == match.getTeamBId()) {
+                teamBNrr = -teamBNrr;
+                teamANrr = -teamANrr;
+            }
+
+            db.updatePointsTableRow(match.getTournamentId(), match.getTeamAId(), teamAWon, tied, teamANrr);
+            db.updatePointsTableRow(match.getTournamentId(), match.getTeamBId(), teamBWon, tied, teamBNrr);
+        }
+        
+        // Show celebration animation
+        showLottieAnimation(R.raw.win);
+
+        // Show result dialog after 2-second delay
+        lottieHandler.postDelayed(() -> {
+            if (!isFinishing()) {
+                new com.google.android.material.dialog.MaterialAlertDialogBuilder(this)
+                        .setTitle("Match Complete!")
+                        .setMessage(result)
+                        .setPositiveButton("View Scorecard", (d, w) -> {
+                            Intent intent = new Intent(this, ScorecardActivity.class);
+                            intent.putExtra("match_id", matchId);
+                            startActivity(intent);
+                            finish();
+                        })
+                        .setNegativeButton("Go Home", (d, w) -> {
+                            finish(); // Back to MainActivity
+                        })
+                        .setCancelable(false)
+                        .show();
+            }
+        }, 2000);
     }
 
     // ============================================================

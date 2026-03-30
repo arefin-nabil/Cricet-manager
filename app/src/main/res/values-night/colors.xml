@@ -54,5 +54,25 @@
     <!-- Divider & Borders -->
     <color name="divider">#FF2C2C2C</color>
     <color name="border_green">#4D00C853</color>
-    <color name="stroke_card">#FF303030</color>
+    <color name="stroke_card">#FF333333</color>
+
+    <!-- ── Team Avatar ── -->
+    <color name="avatar_bg_team">#1A2D4A</color>        <!-- Dark Blue tint -->
+
+    <!-- ── Left Accent Bar ── -->
+    <color name="color_team_accent">#4A9FE0</color>      <!-- Blue 300 (brighter for dark bg) -->
+
+    <!-- ── Member Count Chip ── -->
+    <color name="chip_bg_team">#1A2D4A</color>           <!-- Dark Blue tint -->
+    <color name="chip_text_team">#6BB8F5</color>         <!-- Blue 200 -->
+
+    <!-- ── Status Chip ── -->
+    <color name="chip_bg_status">#0F2A15</color>         <!-- Dark Green tint -->
+    <color name="chip_text_status">#5ECC6F</color>       <!-- Green 300 -->
+
+    <!-- ── Action Buttons ── -->
+    <color name="bg_action_neutral">#FF303030</color>    <!-- Dark Gray -->
+    <color name="bg_danger_subtle">#2A1010</color>       <!-- Dark Red tint -->
+    <color name="stroke_danger_subtle">#5C2020</color>   <!-- Dark Red border -->
+    <color name="color_danger">#FF6B6B</color>           <!-- Red 300 (softer) -->
 </resources>
