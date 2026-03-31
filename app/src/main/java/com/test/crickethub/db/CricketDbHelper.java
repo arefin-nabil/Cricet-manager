@@ -35,7 +35,7 @@ public class CricketDbHelper extends SQLiteOpenHelper {
 
     // Database Metadata
     private static final String DB_NAME    = "crickethub.db";
-    private static final int    DB_VERSION = 3;
+    private static final int    DB_VERSION = 4;
 
     // ============================================================
     // Table: teams
@@ -65,6 +65,7 @@ public class CricketDbHelper extends SQLiteOpenHelper {
     private static final String COL_PLY_NAME    = "name";
     private static final String COL_PLY_JERSEY  = "jersey_number";
     private static final String COL_PLY_ROLE    = "role";
+    private static final String COL_PLY_IS_CAPTAIN = "is_captain";
 
     private static final String CREATE_TABLE_PLAYERS =
             "CREATE TABLE " + TABLE_PLAYERS + " (" +
@@ -73,6 +74,7 @@ public class CricketDbHelper extends SQLiteOpenHelper {
             COL_PLY_NAME    + " TEXT NOT NULL, " +
             COL_PLY_JERSEY  + " INTEGER DEFAULT 0, " +
             COL_PLY_ROLE    + " TEXT DEFAULT 'Batsman', " +
+            COL_PLY_IS_CAPTAIN + " INTEGER DEFAULT 0, " +
             "FOREIGN KEY (" + COL_PLY_TEAM_ID + ") REFERENCES " + TABLE_TEAMS + "(" + COL_TEAM_ID + ")" +
             ")";
 
@@ -283,6 +285,10 @@ public class CricketDbHelper extends SQLiteOpenHelper {
             db.execSQL(CREATE_TABLE_TRN_TEAMS);
             db.execSQL(CREATE_TABLE_TRN_POINTS);
         }
+        if (oldVersion < 4) {
+            // Version 4 migration -> Individual player captaincy support
+            db.execSQL("ALTER TABLE " + TABLE_PLAYERS + " ADD COLUMN " + COL_PLY_IS_CAPTAIN + " INTEGER DEFAULT 0");
+        }
     }
 
     @Override
@@ -390,6 +396,7 @@ public class CricketDbHelper extends SQLiteOpenHelper {
         cv.put(COL_PLY_NAME, player.getName());
         cv.put(COL_PLY_JERSEY, player.getJerseyNumber());
         cv.put(COL_PLY_ROLE, player.getRole());
+        cv.put(COL_PLY_IS_CAPTAIN, player.isCaptain() ? 1 : 0);
         long id = db.insert(TABLE_PLAYERS, null, cv);
         player.setId(id);
         return id;
@@ -420,6 +427,7 @@ public class CricketDbHelper extends SQLiteOpenHelper {
                 cv.put(COL_PLY_NAME, p.getName());
                 cv.put(COL_PLY_JERSEY, p.getJerseyNumber());
                 cv.put(COL_PLY_ROLE, p.getRole());
+                cv.put(COL_PLY_IS_CAPTAIN, p.isCaptain() ? 1 : 0);
                 db.insert(TABLE_PLAYERS, null, cv);
             }
             db.setTransactionSuccessful();
@@ -443,6 +451,7 @@ public class CricketDbHelper extends SQLiteOpenHelper {
                 p.setName(c.getString(c.getColumnIndexOrThrow(COL_PLY_NAME)));
                 p.setJerseyNumber(c.getInt(c.getColumnIndexOrThrow(COL_PLY_JERSEY)));
                 p.setRole(c.getString(c.getColumnIndexOrThrow(COL_PLY_ROLE)));
+                p.setCaptain(c.getInt(c.getColumnIndexOrThrow(COL_PLY_IS_CAPTAIN)) == 1);
                 players.add(p);
             }
             c.close();

@@ -4,6 +4,8 @@
     <!-- CricketHub Color Palette - LIGHT MODE (Default)             -->
     <!-- ============================================================ -->
 
+    <color name="white">#FFFFFF</color>
+
     <!-- Primary Backgrounds (Light/Soft off-white) -->
     <color name="bg_primary">#FFF8F9FA</color>
     <color name="bg_secondary">#FFFFFFFF</color>

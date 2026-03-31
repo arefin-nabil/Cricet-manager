@@ -86,7 +86,7 @@ public class LiveScoringActivity extends AppCompatActivity {
     // Views — Action Buttons
     private TextView btnRun0, btnRun1, btnRun2, btnRun3, btnRun4, btnRun6;
     private MaterialButton btnWide, btnNoBall, btnBye, btnLegBye;
-    private MaterialButton btnWicket, btnUndo, btnNextOver;
+    private MaterialButton btnWicket, btnUndo, btnChangeBowler;
 
     // Lottie celebration overlay
     private LottieAnimationView lottieEventOverlay;
@@ -108,8 +108,7 @@ public class LiveScoringActivity extends AppCompatActivity {
     private List<Player> battingTeamPlayers = new ArrayList<>();
     private List<Player> bowlingTeamPlayers = new ArrayList<>();
 
-    // Index of next batsman to come in (0 and 1 are the openers)
-    private int nextBatsmanIndex = 2;
+    // Ball-by-ball log for current over (for "this over" strip)
 
     // Ball-by-ball log for current over (for "this over" strip)
     private List<BallEvent> currentOverBalls = new ArrayList<>();
@@ -165,7 +164,7 @@ public class LiveScoringActivity extends AppCompatActivity {
         setupExtrasButtons();
         setupWicketButton();
         setupUndoButton();
-        setupNextOverButton();
+        setupChangeBowlerButton();
         refreshScoreboardUI();
     }
 
@@ -241,7 +240,7 @@ public class LiveScoringActivity extends AppCompatActivity {
         // Action
         btnWicket = findViewById(R.id.btn_wicket);
         btnUndo = findViewById(R.id.btn_undo);
-        btnNextOver = findViewById(R.id.btn_next_over);
+        btnChangeBowler = findViewById(R.id.btn_change_bowler_small);
 
         // Lottie celebration overlay
         lottieEventOverlay = findViewById(R.id.lottie_event_overlay);
@@ -468,7 +467,7 @@ public class LiveScoringActivity extends AppCompatActivity {
         int penalty = 1; 
         addRunsToMatch(penalty + extraRuns);
         currentBowler.addRunsConceded(penalty + extraRuns);
-        currentBowler.addBallBowled(); // NB counts for bowler
+        currentBowler.addBallBowled(false); // NB is not a legal delivery for over tally
 
         BallEvent ball = new BallEvent();
         ball.setDeliveryType(BallEvent.TYPE_NO_BALL);
@@ -489,6 +488,7 @@ public class LiveScoringActivity extends AppCompatActivity {
         } else {
             striker.addBall(); // Ball faced
             ball.setExtras(penalty + extraRuns);
+            ball.setBatsmanId(striker.getId()); // Still record who was facing
             ball.setDisplayLabel("NB+" + (extraType.equals(BallEvent.TYPE_BYE) ? "B" : "LB") + extraRuns);
             
             if (extraRuns % 2 != 0) swapStriker();
@@ -523,16 +523,15 @@ public class LiveScoringActivity extends AppCompatActivity {
     // NEXT OVER BUTTON
     // ============================================================
 
-    private void setupNextOverButton() {
-        btnNextOver.setOnClickListener(v -> {
-            // Allow manual over completion (for edge cases like retiring hurts)
-            if (currentOverBalls.isEmpty()) {
-                Toast.makeText(this, "No balls bowled yet", Toast.LENGTH_SHORT).show();
-                return;
-            }
-            String overSummary = "Manual Over End\nScore: " + match.getCurrentScore() + "/" + match.getCurrentWickets();
+    // ============================================================
+    // CHANGE BOWLER / NEXT OVER BUTTON
+    // ============================================================
+ 
+    private void setupChangeBowlerButton() {
+        btnChangeBowler.setOnClickListener(v -> {
+            String overSummary = "Change Bowler / Manual Over End\nScore: " + match.getCurrentScore() + "/" + match.getCurrentWickets();
             isWaitingForNextBowler = true;
-            showTransitionPauseDialog("Over Finished", overSummary, this::endOverAndChangeBowler);
+            showTransitionPauseDialog("Rotation", overSummary, this::endOverAndChangeBowler);
         });
     }
 
@@ -545,8 +544,10 @@ public class LiveScoringActivity extends AppCompatActivity {
      * Updates: batsman stats, bowler stats, match score, overs count.
      */
     private void recordRuns(int runs) {
-        if (striker == null || currentBowler == null)
+        if (striker == null || currentBowler == null || isWaitingForNextBatsman) {
+            if (isWaitingForNextBatsman) Toast.makeText(this, "Select next batsman first", Toast.LENGTH_SHORT).show();
             return;
+        }
 
         // Update batsman
         striker.addRuns(runs);
@@ -561,7 +562,7 @@ public class LiveScoringActivity extends AppCompatActivity {
         }
 
         // Update bowler
-        currentBowler.addBallBowled();
+        currentBowler.addBallBowled(true);
         currentBowler.addRunsConceded(runs);
 
         // Update match score
@@ -570,25 +571,26 @@ public class LiveScoringActivity extends AppCompatActivity {
         // Increment ball count in over
         advanceBall(true);
 
-        // Partnership
-        partnershipRuns += runs;
-        partnershipBalls++;
-
-        // Rotate strike on odd runs
-        if (runs % 2 != 0) {
-            swapStriker();
-        }
-
-        // Create and log ball event
+        // Create and log ball event (CAPTURE STRIKER ID BEFORE ROTATION)
         BallEvent ball = BallEvent.runs(runs, striker.getId(), currentBowler.getId());
         ball.setMatchId(matchId);
         ball.setInningsNumber(match.getInningsNumber());
         ball.setOverNumber(match.getCurrentOvers());
+        ball.setBallInOver(match.getCurrentBalls() + 1);
         db.insertBallEvent(ball);
 
         // Add chip to over strip
         addBallChip(ball);
         currentOverBalls.add(ball);
+
+        // Partnership
+        partnershipRuns += runs;
+        partnershipBalls++;
+
+        // Rotate strike on odd runs (AFTER SAVING TO DB)
+        if (runs % 2 != 0) {
+            swapStriker();
+        }
 
         // Save match state
         db.updateMatch(match);
@@ -609,13 +611,17 @@ public class LiveScoringActivity extends AppCompatActivity {
 
     /** Record wide or no-ball (does not consume a legal delivery). */
     private void recordExtra(String type, int extraRuns) {
+        if (striker == null || currentBowler == null || isWaitingForNextBatsman) {
+             if (isWaitingForNextBatsman) Toast.makeText(this, "Select next batsman first", Toast.LENGTH_SHORT).show();
+             return;
+        }
         int penalty = 1; // wide or no-ball = 1 penalty run
         addRunsToMatch(penalty + extraRuns);
         currentBowler.addRunsConceded(penalty + extraRuns);
 
         // Wide/NB: does NOT advance the legal ball count
         if (type.equals(BallEvent.TYPE_NO_BALL)) {
-            currentBowler.addBallBowled(); // no-ball counts for bowler but not over count
+            currentBowler.addBallBowled(false); // no-ball counts for bowler but not over count
         }
 
         BallEvent ball = type.equals(BallEvent.TYPE_WIDE)
@@ -638,28 +644,32 @@ public class LiveScoringActivity extends AppCompatActivity {
         showRunInputDialog("How many " + (type.equals(BallEvent.TYPE_BYE) ? "Byes" : "Leg Byes") + "?",
                 byeRuns -> {
                     striker.addBall(); // ball counts for batsman
-                    currentBowler.addBallBowled();
+                    currentBowler.addBallBowled(true);
                     currentBowler.addRunsConceded(byeRuns);
                     addRunsToMatch(byeRuns);
                     advanceBall(true);
                     partnershipBalls++;
 
-                    if (byeRuns % 2 != 0)
-                        swapStriker();
-
+                    // Record ball event (BEFORE strike rotation)
                     BallEvent ball = new BallEvent();
                     ball.setDeliveryType(type);
                     ball.setExtras(byeRuns);
+                    ball.setBatsmanId(striker.getId()); // The one who faced it
                     ball.setBowlerId(currentBowler.getId());
                     ball.setMatchId(matchId);
                     ball.setInningsNumber(match.getInningsNumber());
                     ball.setOverNumber(match.getCurrentOvers());
+                    ball.setBallInOver(match.getCurrentBalls() + 1);
                     ball.setDisplayLabel(type.equals(BallEvent.TYPE_BYE)
                             ? "B+" + byeRuns
                             : "LB+" + byeRuns);
                     db.insertBallEvent(ball);
                     addBallChip(ball);
                     currentOverBalls.add(ball);
+
+                    // Strike rotation
+                    if (byeRuns % 2 != 0)
+                        swapStriker();
 
                     db.updateMatch(match);
                     refreshScoreboardUI();
@@ -743,30 +753,38 @@ public class LiveScoringActivity extends AppCompatActivity {
             dismissed.setOut(true);
             dismissed.setHowOut(dismissalType + " b " + currentBowler.getName());
         }
+        
+        // 1. Identify which slot got out BEFORE nulling
+        boolean isStrikerOut = (dismissed == striker);
 
-        // Credit bowler with wicket (except run out)
+        // 2. Update dismissed player's personal stats
+        if (dismissed != null) {
+            dismissed.setOut(true);
+            dismissed.setHowOut(dismissalType + " b " + currentBowler.getName());
+            dismissed.addBall(); // consumed the delivery
+        }
+
+        // 3. Update bowler's wickets (unless run out)
         if (!dismissalType.equals(BallEvent.DIS_RUN_OUT)) {
             currentBowler.incrementWickets();
         }
+        currentBowler.addBallBowled(true);
 
-        // Advance over ball and update match wickets
-        striker.addBall();
-        currentBowler.addBallBowled();
+        // 4. Update Match Logic
         advanceBall(true);
         partnershipBalls++;
-
         if (match.getInningsNumber() == 1) {
             match.incrementInnings1Wickets();
         } else {
             match.incrementInnings2Wickets();
         }
 
-        // Record ball event
+        // 5. Save Ball Event
         BallEvent ball = BallEvent.wicket(
                 dismissalType,
                 dismissed != null ? dismissed.getId() : 0,
                 currentBowler.getId(),
-                0 // fielder – simplified
+                0
         );
         ball.setMatchId(matchId);
         ball.setInningsNumber(match.getInningsNumber());
@@ -775,6 +793,10 @@ public class LiveScoringActivity extends AppCompatActivity {
         db.insertBallEvent(ball);
         addBallChip(ball);
         currentOverBalls.add(ball);
+
+        // 6. NOW clear the field reference
+        if (isStrikerOut) striker = null;
+        else nonStriker = null;
 
         db.updateMatch(match);
         refreshScoreboardUI();
@@ -800,11 +822,18 @@ public class LiveScoringActivity extends AppCompatActivity {
     private void showNextBatsmanDialog(Player dismissed) {
         isWaitingForNextBatsman = false; // Reset flag
         waitingForDismissedPlayer = null;
-        List<String> upcoming = new ArrayList<>();
+        
         List<Player> players = new ArrayList<>();
-        for (int i = nextBatsmanIndex; i < battingTeamPlayers.size(); i++) {
-            upcoming.add(battingTeamPlayers.get(i).getName());
-            players.add(battingTeamPlayers.get(i));
+        List<String> upcoming = new ArrayList<>();
+        
+        for (Player p : battingTeamPlayers) {
+            // Player is eligible if not already out and not currently on field
+            boolean isOnField = (striker != null && p.getId() == striker.getId()) || 
+                              (nonStriker != null && p.getId() == nonStriker.getId());
+            if (!p.isOut() && !isOnField) {
+                upcoming.add(p.getName());
+                players.add(p);
+            }
         }
 
         if (upcoming.isEmpty()) {
@@ -821,7 +850,6 @@ public class LiveScoringActivity extends AppCompatActivity {
                     } else {
                         nonStriker = nextBat;
                     }
-                    nextBatsmanIndex = battingTeamPlayers.indexOf(nextBat) + 1;
                     
                     // Reset partnership
                     partnershipRuns = 0;
@@ -988,7 +1016,6 @@ public class LiveScoringActivity extends AppCompatActivity {
                 .setCancelable(false)
                 .setPositiveButton("Start 2nd Innings", (d, w) -> {
                     // Reset openers now that user clicked start
-                    nextBatsmanIndex = 2;
                     if (battingTeamPlayers.size() >= 2) {
                         striker = battingTeamPlayers.get(0);
                         nonStriker = battingTeamPlayers.get(1);
@@ -1216,7 +1243,7 @@ public class LiveScoringActivity extends AppCompatActivity {
 
         // Striker
         if (striker != null) {
-            tvStrikerName.setText(striker.getName());
+            tvStrikerName.setText(striker.getDisplayName());
             tvStrikerRuns.setText(String.valueOf(striker.getRuns()));
             tvStrikerBalls.setText(String.valueOf(striker.getBalls()));
             tvStrikerSR.setText(String.format("SR: %.1f", striker.getStrikeRate()));
@@ -1224,7 +1251,7 @@ public class LiveScoringActivity extends AppCompatActivity {
 
         // Non-striker
         if (nonStriker != null) {
-            tvNonStrikerName.setText(nonStriker.getName());
+            tvNonStrikerName.setText(nonStriker.getDisplayName());
             tvNonStrikerRuns.setText(String.valueOf(nonStriker.getRuns()));
             tvNonStrikerBalls.setText(String.valueOf(nonStriker.getBalls()));
             tvNonStrikerSR.setText(String.format("SR: %.1f", nonStriker.getStrikeRate()));
@@ -1232,7 +1259,7 @@ public class LiveScoringActivity extends AppCompatActivity {
 
         // Bowler
         if (currentBowler != null) {
-            tvBowlerName.setText(currentBowler.getName());
+            tvBowlerName.setText(currentBowler.getDisplayName());
             tvBowlerOvers.setText(currentBowler.getOversBowledFormatted());
             tvBowlerMaidens.setText(String.valueOf(currentBowler.getMaidens()));
             tvBowlerRuns.setText(String.valueOf(currentBowler.getRunsConceded()));

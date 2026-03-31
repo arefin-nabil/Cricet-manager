@@ -4,10 +4,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/spacing_md"
-    android:layout_marginTop="@dimen/spacing_sm"
-    android:layout_marginBottom="@dimen/spacing_sm"
-    app:cardCornerRadius="16dp"
+    android:layout_marginHorizontal="@dimen/spacing_xs"
+    android:layout_marginTop="@dimen/spacing_xs"
+    android:layout_marginBottom="@dimen/spacing_xs"
+    app:cardCornerRadius="@dimen/radius_lg"
     app:cardElevation="0dp"
     app:strokeColor="@color/stroke_card"
     app:strokeWidth="1dp"
@@ -33,10 +33,10 @@
         <!-- Avatar Container with Lottie -->
         <FrameLayout
             android:id="@+id/container_avatar"
-            android:layout_width="52dp"
-            android:layout_height="52dp"
-            android:layout_marginStart="14dp"
-            android:layout_marginTop="14dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="@dimen/spacing_sm"
+            android:layout_marginTop="@dimen/spacing_sm"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@id/accent_bar">
 
@@ -73,8 +73,8 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center"
-            android:layout_marginEnd="12dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginEnd="@dimen/spacing_sm"
+            android:layout_marginTop="@dimen/spacing_sm"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
@@ -109,9 +109,9 @@
             android:id="@+id/tv_team_name"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="14dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginStart="@dimen/spacing_sm"
+            android:layout_marginEnd="@dimen/spacing_sm"
+            android:layout_marginTop="@dimen/spacing_sm"
             android:text="Team Name"
             android:textColor="@color/text_primary"
             android:textSize="15sp"

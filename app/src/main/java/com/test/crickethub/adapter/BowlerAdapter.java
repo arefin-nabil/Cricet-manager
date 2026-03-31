@@ -55,7 +55,7 @@ public class BowlerAdapter extends RecyclerView.Adapter<BowlerAdapter.ViewHolder
         }
 
         void bind(Player p) {
-            tvName.setText(p.getName());
+            tvName.setText(p.getDisplayName());
             tvOvers.setText(p.getOversBowledFormatted());
             tvRuns.setText(String.valueOf(p.getRunsConceded()));
             tvWickets.setText(String.valueOf(p.getWicketsTaken()));

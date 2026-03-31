@@ -39,7 +39,7 @@ public class CreateTeamActivity extends AppCompatActivity {
     private TextInputEditText  etTeamName;
     private TextInputEditText  etTeamDesc;
     private RecyclerView       rvPlayers;
-    private MaterialButton     btnAddPlayer;
+    private com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton fabAddPlayer;
     private MaterialButton     btnSaveTeam;
     private TextView           tvPlayerCount;
     private TextView           tvNoPlayers;
@@ -95,7 +95,7 @@ public class CreateTeamActivity extends AppCompatActivity {
         etTeamName    = findViewById(R.id.et_team_name);
         etTeamDesc    = findViewById(R.id.et_team_desc);
         rvPlayers     = findViewById(R.id.rv_players);
-        btnAddPlayer  = findViewById(R.id.btn_add_player);
+        fabAddPlayer  = findViewById(R.id.fab_add_player);
         btnSaveTeam   = findViewById(R.id.btn_save_team);
         tvPlayerCount = findViewById(R.id.tv_player_count);
         tvNoPlayers   = findViewById(R.id.tv_no_players);
@@ -140,20 +140,31 @@ public class CreateTeamActivity extends AppCompatActivity {
     // ============================================================
 
     private void setupClickListeners() {
-        btnAddPlayer.setOnClickListener(v -> {
+        fabAddPlayer.setOnClickListener(v -> {
             Player p = new Player();
             p.setName("");
             playerList.add(p);
             playerAdapter.notifyItemInserted(playerList.size() - 1);
             updateEmptyState();
+            updatePlayerCountLabel();
 
             // Auto-scroll to show the new player (prevent keyboard overlap)
-            rvPlayers.post(() -> {
-                rvPlayers.smoothScrollToPosition(playerList.size() - 1);
+            findViewById(R.id.scroll_create_team).post(() -> {
                 View scrollView = findViewById(R.id.scroll_create_team);
-                if (scrollView instanceof android.widget.ScrollView) {
-                    ((android.widget.ScrollView) scrollView).fullScroll(View.FOCUS_DOWN);
+                if (scrollView instanceof androidx.core.widget.NestedScrollView) {
+                    ((androidx.core.widget.NestedScrollView) scrollView).fullScroll(View.FOCUS_DOWN);
                 }
+                
+                // Try to focus the newest name field
+                rvPlayers.postDelayed(() -> {
+                    RecyclerView.ViewHolder holder = rvPlayers.findViewHolderForAdapterPosition(playerList.size() - 1);
+                    if (holder != null) {
+                        View nameInput = holder.itemView.findViewById(R.id.et_player_name);
+                        if (nameInput != null) {
+                            nameInput.requestFocus();
+                        }
+                    }
+                }, 100);
             });
         });
 

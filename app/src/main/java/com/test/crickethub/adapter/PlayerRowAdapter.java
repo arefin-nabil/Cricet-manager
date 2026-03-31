@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -83,6 +84,7 @@ public class PlayerRowAdapter extends RecyclerView.Adapter<PlayerRowAdapter.View
         TextView       tvJersey;
         TextInputEditText etName;
         Spinner        spinnerRole;
+        CheckBox       cbCaptain;
         ImageButton    btnDelete;
 
         ViewHolder(@NonNull View itemView) {
@@ -90,6 +92,7 @@ public class PlayerRowAdapter extends RecyclerView.Adapter<PlayerRowAdapter.View
             tvJersey    = itemView.findViewById(R.id.tv_jersey_number);
             etName      = itemView.findViewById(R.id.et_player_name);
             spinnerRole = itemView.findViewById(R.id.spinner_role);
+            cbCaptain   = itemView.findViewById(R.id.cb_is_captain);
             btnDelete   = itemView.findViewById(R.id.btn_delete_player);
         }
 
@@ -134,6 +137,24 @@ public class PlayerRowAdapter extends RecyclerView.Adapter<PlayerRowAdapter.View
                     player.setRole(roles[pos]);
                 }
                 @Override public void onNothingSelected(android.widget.AdapterView<?> parent) {}
+            });
+
+            // Track captain status
+            cbCaptain.setOnCheckedChangeListener(null); // Clear first to avoid trigger loop
+            cbCaptain.setChecked(player.isCaptain());
+            cbCaptain.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    // Uncheck all other players
+                    for (int i = 0; i < players.size(); i++) {
+                        if (i != getAdapterPosition()) {
+                            players.get(i).setCaptain(false);
+                        }
+                    }
+                    player.setCaptain(true);
+                    notifyDataSetChanged(); // Refresh all to show only one check
+                } else {
+                    player.setCaptain(false);
+                }
             });
 
             // Delete

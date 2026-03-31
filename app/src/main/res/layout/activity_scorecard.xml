@@ -10,7 +10,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_primary"
-    tools:context=".activity.ScorecardActivity">
+    tools:context=".activity.ScorecardActivity"
+    android:id="@+id/main"
+    >
 
     <!-- ============================================================ -->
     <!-- TOOLBAR                                                       -->

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <!--
     fragment_scorecard_tab.xml - Reusable tab fragment layout
     Used for Batting, Bowling, and FoW tabs inside the scorecard
@@ -96,8 +96,58 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_scorecard_tab"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_height="0dp"
         android:paddingTop="@dimen/spacing_xs"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <!-- Extras Row (Visible only for Batting) -->
+    <LinearLayout
+        android:id="@+id/layout_extras_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/bg_secondary"
+        android:padding="@dimen/spacing_md"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"
+            android:layout_marginBottom="@dimen/spacing_sm" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="EXTRAS"
+                android:textSize="@dimen/text_label"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_extras_total"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="@dimen/text_label"
+                android:textColor="@color/text_primary"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_extras_breakdown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="(wd 0, nb 0, b 0, lb 0)"
+            android:textSize="@dimen/text_caption"
+            android:textColor="@color/text_hint" />
+    </LinearLayout>
 
 </LinearLayout>

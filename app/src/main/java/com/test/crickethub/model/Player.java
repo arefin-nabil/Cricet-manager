@@ -16,6 +16,7 @@ public class Player {
     private String name;
     private int jerseyNumber;
     private String role;
+    private boolean isCaptain = false;
 
     // ============================================================
     // In-match live stats (transient – not stored in DB directly)
@@ -95,11 +96,19 @@ public class Player {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
+    /** Returns name with (C) suffix if player is captain. */
+    public String getDisplayName() {
+        return isCaptain ? name + " (C)" : name;
+    }
+
     public int getJerseyNumber() { return jerseyNumber; }
     public void setJerseyNumber(int jerseyNumber) { this.jerseyNumber = jerseyNumber; }
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+
+    public boolean isCaptain() { return isCaptain; }
+    public void setCaptain(boolean captain) { isCaptain = captain; }
 
     public int getRuns() { return runs; }
     public void setRuns(int runs) { this.runs = runs; }
@@ -124,7 +133,8 @@ public class Player {
     public int getOversBowled() { return oversBowled; }
     public int getBallsBowled() { return ballsBowled; }
 
-    public void addBallBowled() {
+    public void addBallBowled(boolean isLegal) {
+        if (!isLegal) return;
         this.ballsBowled++;
         if (this.ballsBowled >= 6) {
             this.oversBowled++;
@@ -145,6 +155,6 @@ public class Player {
 
     @Override
     public String toString() {
-        return name; // Used by Spinner adapters
+        return isCaptain ? name + " (C)" : name; // Used by Spinner adapters
     }
 }

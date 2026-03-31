@@ -58,7 +58,7 @@ public class BatsmanAdapter extends RecyclerView.Adapter<BatsmanAdapter.ViewHold
         }
 
         void bind(Player p) {
-            tvName.setText(p.getName());
+            tvName.setText(p.getDisplayName());
             tvHowOut.setText(p.isOut() ? p.getHowOut() : "not out *");
             tvRuns.setText(String.valueOf(p.getRuns()));
             tvBalls.setText(String.valueOf(p.getBalls()));

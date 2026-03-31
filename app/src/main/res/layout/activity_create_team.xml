@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
     activity_create_team.xml - Create / Edit Team Screen
-    Changes:
-    - "Add Player" button relocated to TOP of form (before RecyclerView)
-    - fillViewport="true" on NestedScrollView fixes keyboard overlap
-    - Bottom "Save Team" button fixed at bottom of screen
+    Fixed: Changed root to ConstraintLayout to support used layout constraints.
 -->
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -29,7 +26,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <!-- SCROLLABLE FORM CONTENT — fillViewport ensures content adjusts when keyboard opens -->
+    <!-- SCROLLABLE FORM CONTENT -->
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll_create_team"
         android:layout_width="0dp"
@@ -48,10 +45,7 @@
             android:orientation="vertical"
             android:padding="@dimen/spacing_md">
 
-            <!-- ─────────────────────────────────────── -->
-            <!-- TEAM IDENTITY SECTION                   -->
-            <!-- ─────────────────────────────────────── -->
-
+            <!-- TEAM IDENTITY SECTION -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -70,7 +64,6 @@
                 android:gravity="center_vertical"
                 android:layout_marginBottom="@dimen/spacing_md">
 
-                <!-- Team Logo Placeholder -->
                 <ImageView
                     android:id="@+id/iv_team_logo"
                     android:layout_width="72dp"
@@ -123,9 +116,7 @@
                     android:maxLines="4" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- ─────────────────────────────────────── -->
-            <!-- PLAYERS SECTION HEADER                  -->
-            <!-- ─────────────────────────────────────── -->
+            <!-- PLAYERS SECTION HEADER -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -149,20 +140,9 @@
                     android:layout_height="wrap_content"
                     android:text="0 / 11"
                     android:textSize="@dimen/text_caption"
-                    android:textColor="@color/text_secondary" />
+                    android:textColor="@color/green_primary"
+                    android:textStyle="bold" />
             </LinearLayout>
-
-            <!-- ─────────────────────────────────────── -->
-            <!-- ADD PLAYER BUTTON — NOW AT THE TOP      -->
-            <!-- ─────────────────────────────────────── -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btn_add_player"
-                style="@style/Widget.CricketHub.Button.Secondary"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/touch_target_min"
-                android:layout_marginBottom="@dimen/spacing_sm"
-                android:text="@string/add_player"
-                android:textColor="@color/green_primary" />
 
             <!-- Empty state -->
             <TextView
@@ -175,18 +155,33 @@
                 android:gravity="center"
                 android:visibility="visible" />
 
-            <!-- Players RecyclerView -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_players"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:nestedScrollingEnabled="false"
+                android:layout_marginBottom="80dp"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 tools:listitem="@layout/item_player_row"
                 tools:itemCount="4" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <!-- FLOATING ACTION BUTTON — Above Save Button -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fab_add_player"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Player"
+        android:textColor="@color/white"
+        app:icon="@android:drawable/ic_input_add"
+        app:iconTint="@color/white"
+        app:backgroundTint="@color/green_primary"
+        android:layout_marginEnd="@dimen/spacing_md"
+        android:layout_marginBottom="@dimen/spacing_md"
+        app:layout_constraintBottom_toTopOf="@id/btn_save_team"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- SAVE TEAM BUTTON - Fixed at bottom -->
     <com.google.android.material.button.MaterialButton
@@ -196,7 +191,7 @@
         android:layout_height="@dimen/touch_target_min"
         android:layout_marginStart="@dimen/spacing_md"
         android:layout_marginEnd="@dimen/spacing_md"
-        android:layout_marginBottom="@dimen/spacing_lg"
+        android:layout_marginBottom="@dimen/spacing_sm"
         android:text="@string/save_team"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

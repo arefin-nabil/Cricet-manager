@@ -9,38 +9,34 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="@dimen/spacing_md"
+    android:layout_marginHorizontal="@dimen/spacing_xs"
     android:layout_marginTop="@dimen/spacing_xs"
     android:layout_marginBottom="@dimen/spacing_xs"
-    app:cardCornerRadius="16dp"
+    app:cardCornerRadius="12dp"
     app:cardElevation="0dp"
     app:strokeColor="@color/stroke_card"
     app:strokeWidth="1dp"
     app:cardBackgroundColor="@color/bg_card">
 
-    <!-- Left accent bar (green — players belong to the team) -->
-    <View
-        android:layout_width="4dp"
-        android:layout_height="match_parent"
-        android:background="@color/green_primary" />
+    <!-- No left accent bar to save space as requested -->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingStart="18dp"
-        android:paddingEnd="12dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
+        android:paddingStart="@dimen/spacing_sm"
+        android:paddingEnd="@dimen/spacing_sm"
+        android:paddingTop="@dimen/spacing_xs"
+        android:paddingBottom="@dimen/spacing_xs"
         android:gravity="center_vertical">
 
         <!-- Jersey Number Badge -->
         <TextView
             android:id="@+id/tv_jersey_number"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:text="#1"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:textColor="@color/green_primary"
             android:textStyle="bold"
             android:gravity="center"
@@ -52,8 +48,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:layout_marginStart="12dp"
-            android:layout_marginEnd="8dp">
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="6dp">
 
             <!-- Name Input -->
             <com.google.android.material.textfield.TextInputLayout
@@ -68,7 +64,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
-                    android:textSize="14sp"
+                    android:textSize="13sp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
                     android:inputType="textCapWords"
                     android:maxLines="1"
                     android:imeOptions="actionNext" />
@@ -78,20 +76,33 @@
             <Spinner
                 android:id="@+id/spinner_role"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:layout_marginTop="4dp"
+                android:layout_height="32dp"
+                android:layout_marginTop="2dp"
                 android:background="@color/bg_surface"
                 android:popupBackground="@color/bg_card" />
+
+            <!-- Captain Checkbox -->
+            <CheckBox
+                android:id="@+id/cb_is_captain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Captain"
+                android:textSize="12sp"
+                android:textColor="@color/text_secondary"
+                android:buttonTint="@color/green_primary"
+                android:layout_marginTop="2dp" />
 
         </LinearLayout>
 
         <!-- Delete Button -->
         <ImageButton
             android:id="@+id/btn_delete_player"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:src="@android:drawable/ic_menu_delete"
             android:background="@drawable/bg_action_btn_danger"
+            android:padding="6dp"
+            android:scaleType="fitCenter"
             android:tint="@color/color_danger"
             android:contentDescription="Delete player" />
 
